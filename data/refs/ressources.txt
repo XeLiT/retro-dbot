@@ -1,0 +1,53 @@
+7000:Zaap:o
+7026:Zaap:o
+7029:Zaap:o
+7500:Frene:o
+7501:Chataignier:o
+7502:Noyer:o
+7503:Chene:o
+7504:Erable:o
+7505:If:o
+7506:Merisier:o
+7507:Ebene:o
+7508:Charme:o
+7509:Orme:o
+7511:Ble:n
+7512:Houblon:n
+7513:Lin:n
+7514:Chanvre:n
+7515:Orge:n
+7516:Seigle:n
+7517:Avoine:n
+7518:Malt:n
+7519:Puits:o
+7520:Fer:o
+7521:Etain:o
+7522:Cuivre:o
+7523:Bronze:o
+7524:Manganese:o
+7525:Kobalte:o
+7526:Argent:o
+7527:Or:o
+7528:Bauxite:o
+7529:Petits poissons (riviere):o
+7530:Petits poissons (mer):o
+7531:Poissons (mer):o
+7532:Poissons (riviere):o
+7533:Trefle a 5 feuilles:n
+7534:Menthe Sauvage:n
+7535:Orchidee Freyesque:n
+7536:Edelweiss:n
+7537:Gros poissons (riviere):o
+7538:Gros poissons (mer):o
+7539:Poissons geants (riviere):o
+7540:Poissons geants (mer):o
+7541:Bombu:o
+7542:Oliviolet:o
+7550:Riz:n
+7551:Pandouille:n
+7552:Bambou sacre:o
+7553:Bambou:o
+7554:Bambou sombre:o
+7555:Dolomite:o
+7556:Silicate
+7557:Kaliptus:o

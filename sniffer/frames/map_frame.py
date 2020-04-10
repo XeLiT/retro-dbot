@@ -1,4 +1,4 @@
-DATA = ''
+DATA = 'GM|+379;1;22;-3;79,48;-3;1560^105,1569^105;8,14;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;|+268;3;33;-1;59,47,47,31,31,103;-3;1565^100,1001^90,1001^90,1563^100,1563^110,1020^95;5,23,23,4,6,14;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;|+453;1;0;-2;31,47,47;-3;1563^90,1001^90,1001^90;2,23,23;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;'
 
 def isFighting():
     return False
@@ -19,24 +19,20 @@ class GroupMob:
     def __init__(self, cell, id, templates, levels):
         self.cell = cell
         self.id = id
-        self.templates = templates
-        self.levels = map(lambda x: int(x), levels)
+        self.templates = list(map(int, templates))
+        self.levels = list(map(int, levels))
 
     def __str__(self):
         return '<GroupMob> {}'.format(self.__dict__)
 
 class Player:
-    def __init__(self, cell, id, health, pa, pm, team):
-        self.cell = cell
-        self.id = id
-        self.health = health
-        self.pa = pa
-        self.pm = pm
-        self.team = team
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
 
     def __str__(self):
         return '<Player> {}'.format(self.__dict__)
 
+# GM
 class MapFrame:
     def __init__(self, data):
         self.mobs = []
@@ -81,8 +77,7 @@ class MapFrame:
                 elif type == -6:  # resources
                     pass
                 else:  # players
-                    if isFighting():
-                        self.players.append(Player(cell, id, infos[14], infos[15], infos[16], infos[24]))
+                    self.players.append(Player(cell=cell, id=id, name=infos[4], guild=infos[16]))
 
 if __name__ == '__main__':
     m = MapFrame(DATA)

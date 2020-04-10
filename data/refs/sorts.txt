@@ -1,0 +1,240 @@
+1:Armure Incandescente
+2:Aveuglement
+3:Attaque Naturelle
+4:Renvoie de Sort
+5:Treve
+6:Armure Terrestre
+7:Bouclier Feca
+8:Retour du Baton
+9:Attaque Nuageuse
+10:Glyphe Enflamme
+11:Teleportation
+12:Glyphe d'Aveuglement
+13:Glyphe de Silence
+14:Armure Venteuse
+15:Glyphe d'immobilisation
+16:Science du baton
+17:Glyphe Agressif
+18:Armure Aqueuse
+19:Bulle
+20:Immunite
+21:Griffe Spectrale
+22:Deplacement Felin
+23:Cri de l'Ours
+24:Corbeau
+25:Soin Animal
+26:Benediction Animale 
+27:Piqûre Motivante
+28:Crapaud
+29:Crocs du Mulou
+30:Fouet
+31:Invocation de Dragonnet Rouge
+32:Resistance Naturelle
+33:Griffe Cinglante
+34:Invocation de Tofu
+35:Invocation de Bouftou
+36:Frappe du Craqueleur
+37:Invocation de Prespic
+38:Invocation de Sanglier
+39:Invocation de Bwork Mage
+40:Invocation de Craqueleur
+41:Sac Anime 
+42:Chance
+43:Lancer de Pelle
+44:Roulage de Pelle
+45:Cle Reductrice
+46:Desinvocation
+47:Boîte de Pandore
+48:Remblai
+49:Pelle Fantomatique
+50:Maladresse
+51:Lancer de Pieces
+52:Cupidite
+53:Force de l'Age
+54:Maladresse de Masse
+55:Acceleration
+56:Pelle du Jugement
+57:Pelle Animee
+58:Pelle Massacrante
+59:Corruption
+60:Coffre Anime 
+61:Sournoiserie
+62:Concentration de Chakra
+63:Coup Sournois
+64:Reperage
+65:Piege Sournois
+66:Attaque Trompeuse
+67:Peur
+68:Fourvoiement
+69:Reperage
+70:Arnaque
+71:Piege Empoisonne 
+72:Invisibilite
+73:Piege Desinvocateur
+74:Double
+75:Pulsion de chakra
+76:Attaque Mortelle
+77:Piege de Silence
+78:Invisibilite d'autrui
+79:Piege de Masse
+80:Piege Mortel
+81:Ralentissement
+82:Contre
+83:Aiguille
+84:Gelure
+85:Flou
+86:Aiguille Chercheuse
+87:Demotivation
+88:Teleportation
+89:Devouement
+90:Fuite
+91:Frappe de Xelor
+92:Rayon Obscur
+93:Fletrissement
+94:Protection Aveuglante
+95:Horloge
+96:Poussiere Temporelle 
+97:Cadran de Xelor
+98:Vol du Temps
+99:Momification
+100:Sablier de Xelor
+101:Roulette
+102:Pile ou Face
+103:Chance d'Ecaflip
+104:Trefle
+105:Bond du Felin
+106:Roue de la Fortune
+107:Topkaj
+108:Esprit Felin
+109:Bluff
+110:Griffe Joueuse
+111:Contrecoup
+112:Griffe de Ceangal
+113:Perception
+114:Rekop
+115:Odorat
+116:Langue Rapeuse 
+117:Griffe Invocatrice
+118:Reflexes
+119:Tout ou rien
+120:Destin d'Ecaflip
+121:Mot Curatif
+122:Mot Blessant:4:8
+123:Mot Drainant
+124:Mot Soignant
+125:Mot Interdit
+126:Mot Stimulant
+127:Mot de Prevention
+128:Mot de Frayeur
+129:Mot d'Amitie 
+130:Mot Revitalisant
+131:Mot de Regeneration
+132:Mot d'Epine
+133:Mot de Jouvence
+134:Mot Vampirique
+135:Mot de Sacrifice
+136:Mot d'Immobilisation
+137:Mot d'Envol
+138:Mot de Silence
+139:Mot d'Altruisme
+140:Mot de Reconstitution
+141:Pression
+142:Bond
+143:Intimidation
+144:Compulsion
+145:Epee Divine
+146:Epee du destin
+147:Guide de Bravoure
+148:Amplification
+149:Mutilation
+150:Couper
+151:Souffle
+152:Epee du Jugement
+153:Puissance
+154:Epee Destructrice
+155:Vitalite
+156:Tempête de Puissance
+157:Epee Celeste
+158:Concentration
+159:Colere de Iop
+160:Epee de Iop
+161:Fleche Magique:8:12
+162:Tir Critique
+163:Fleche Glacee:2:5
+164:Fleche Chercheuse:9:14
+165:Fleche Enflammee
+166:Tir Puissant
+167:Fleche d'Expiation:2:3
+168:Oeil de Taupe
+169:Fleche de Recul
+170:Fleche d'Immobilisation
+171:Fleche Punitive
+172:Tir Eloigne 
+173:Fleche Harcelante
+174:Fleche Cinglante
+175:Fleche Destructrice
+176:Oeil de Lynx
+177:Fleche Ralentissante
+178:Fleche Absorbante
+179:Fleche Explosive
+180:Maîtrise de l'Arc
+181:Tremblement
+182:La Folle
+183:Ronce:6:8
+184:Feu de Brousse
+185:Herbe Folle
+186:Arbre
+187:La Surpuissante
+188:Ronce Insolente
+189:La Sacrifiee
+190:La Gonflable
+191:Ronces Multiples
+192:Ronce Apaisante
+193:La Bloqueuse
+194:Ronces Agressives 
+195:Larme
+196:Vent Empoisonne 
+197:Puissance Sylvestre
+198:Sacrifice Poupesque
+199:Connaissance des Poupees
+200:Poison Paralysant
+431:Chatiment Force 
+432:Pied du Sacrieur
+433:Chatiment Ose 
+434:Attirance
+435:Transfert de Vie
+436:Assaut
+437:Chatiment Agile
+438:Transposition
+439:Epee dansante
+440:Sacrifice
+441:Chatiment Sage
+442:Absorption
+443:Chatiment Spirituel
+444:Derobade
+445:Cooperation
+446:Punition
+447:Furie
+448:Epee volante
+449:Coagulation
+450:Folie sanguinaire
+686:Picole
+687:Poing Enflamme 
+688:Vulnerabilite Incandescente
+689:Epouvante
+690:Souffle Alcoolise 
+691:Vulnerabilite Aqueuse
+692:Gueule de Bois
+693:Karcham
+694:Vulnerabilite Venteuse
+695:Stabilisation
+696:Chamrak
+697:Vulnerabilite Terrestre
+698:Souillure
+699:Lait de Bambou
+700:Vague a Lame
+701:Colere de Zatoïshwan
+702:Flasque Explosive
+703:Pandatak
+704:Pandanlku
+705:Lien Spiritueux

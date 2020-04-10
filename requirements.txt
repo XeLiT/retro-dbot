@@ -1,1 +1,3 @@
 pyshark
+yaswfp
+pywin32

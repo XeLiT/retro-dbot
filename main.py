@@ -2,10 +2,11 @@ import pyshark
 import binascii
 import struct
 import logging
-import frames.map_frame
+from sniffer.frames.map_frame import MapFrame
+from config import NETWORK_INTERFACE, LOGGING_LEVEL
 
-logging.basicConfig(level=logging.DEBUG)
-capture = pyshark.LiveCapture(interface='\\Device\\NPF_{F23B8BB9-F7D0-4D4B-8646-616C19D4390A}', bpf_filter='tcp port 5555 and len > 66')
+capture = pyshark.LiveCapture(interface=NETWORK_INTERFACE, bpf_filter='tcp port 5555 and len > 66')
+logging.basicConfig(level=LOGGING_LEVEL)
 
 for packet in capture.sniff_continuously():
     if not packet.data.len:
@@ -16,8 +17,8 @@ for packet in capture.sniff_continuously():
     logging.debug('<TCP {}>{} L: {}'.format(packet.tcp.srcport, packet.tcp.dstport, packet.data.len))
 
     for action in data:
-        action_code = action[:2]
         logging.debug('   Data: {}'.format(action))
-        if action_code == 'GM':
-            mapFrame = frames.map_frame.MapFrame(action)
-            print(mapFrame)
+        if action.startswith('G'):
+            if action[1] == 'M':
+                mapFrame = MapFrame(action)
+                print(mapFrame)
