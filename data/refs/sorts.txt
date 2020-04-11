@@ -24,7 +24,7 @@
 24:Corbeau
 25:Soin Animal
 26:Benediction Animale 
-27:Piqûre Motivante
+27:PiqÃ»re Motivante
 28:Crapaud
 29:Crocs du Mulou
 30:Fouet
@@ -44,7 +44,7 @@
 44:Roulage de Pelle
 45:Cle Reductrice
 46:Desinvocation
-47:Boîte de Pandore
+47:BoÃ®te de Pandore
 48:Remblai
 49:Pelle Fantomatique
 50:Maladresse
@@ -153,7 +153,7 @@
 153:Puissance
 154:Epee Destructrice
 155:Vitalite
-156:Tempête de Puissance
+156:TempÃªte de Puissance
 157:Epee Celeste
 158:Concentration
 159:Colere de Iop
@@ -177,7 +177,7 @@
 177:Fleche Ralentissante
 178:Fleche Absorbante
 179:Fleche Explosive
-180:Maîtrise de l'Arc
+180:MaÃ®trise de l'Arc
 181:Tremblement
 182:La Folle
 183:Ronce:6:8
@@ -233,7 +233,7 @@
 698:Souillure
 699:Lait de Bambou
 700:Vague a Lame
-701:Colere de Zatoïshwan
+701:Colere de ZatoÃ¯shwan
 702:Flasque Explosive
 703:Pandatak
 704:Pandanlku

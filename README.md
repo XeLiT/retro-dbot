@@ -1,18 +1,18 @@
 ## Requirements
- 1. make on windows https://sourceforge.net/projects/getgnuwin32/files/ install to "C:\Program Files (x86)\" \
-    then add "C:\Program Files (x86)\GnuWin32\bin" to your PATH
+ 1. python3, pip3: https://www.python.org/downloads/
+ 2. Know your network interface `netsh interface show interface`
 
- 2. python3, pip3: https://www.python.org/downloads/
 
 ## Install dependencies
 
 ```
-make install
+pip3 install -r requirements.txt
 ```
 
 ## Run bot
-
+Update the config.py file with your data
 ```
-make run
+# Open cmd as administrator
+py main.py
 ```
  
