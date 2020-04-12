@@ -1,4 +1,4 @@
-from data.map import Map
+from utils.map import Map
 import logging
 
 # 1, -34
@@ -15,7 +15,7 @@ class MapChange:
         map_key = data[2]
         self.map = Map(map_id, map_date, map_key)
         if game_state:
-            game_state.map_changed(self.map)
+            game_state.update_map(self.map)
 
 
 if __name__ == '__main__':

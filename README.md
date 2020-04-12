@@ -12,7 +12,6 @@ pip3 install -r requirements.txt
 ## Run bot
 Update the config.py file with your data
 ```
-# Open cmd as administrator
 py main.py
 ```
  

@@ -2,15 +2,15 @@ import copy
 from urllib.parse import unquote
 from yaswfp import swfparser
 from config import MAP_DIR
-from data.refs.pos import MAPID_TO_POS
+from utils.refs.pos import MAPID_TO_POS
 
 HEX_CHARS = "0123456789ABCDEF"
 ZKARRAY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-SUN_MAGICS = [1030, 1029, 4088, 34]
+SUN_MAGICS = [1030, 1029, 4088]
 MAP_LENGTH = 15
 RED = lambda x: '\033[1;31m{}\033[0m'.format(x)
 YELLOW = lambda x: '\033[0;33m{}\033[0m'.format(x)
-DIM = lambda x: '\e[2m{}\e[22'.format(x)
+DIM = lambda x: '{}'.format(x)
 
 def unhash_cell(raw_cell):
     return [ZKARRAY.index(i) for i in raw_cell]
@@ -26,7 +26,7 @@ class Cell:
         self.layerGroundNum = (cd[0] & 24 << 6) + (cd[2] & 7 << 6) + cd[3]
         self.layerObject1Num = ((cd[0] & 4) << 11) + ((cd[4] & 1) << 12) + (cd[5] << 6) + cd[6]
         self.layerObject2Num = ((cd[0]&2)<<12) + ((cd[7]&1)<<12) + (cd[8]<<6) + cd[9]
-        self.isSun = self.layerObject1Num in SUN_MAGICS
+        self.isSun = self.movement == 2 or self.layerObject1Num in SUN_MAGICS
         self.entity = None
 
     def __str__(self):
@@ -56,6 +56,7 @@ class Map:
         rows = [''.join(strings[i:i+MAP_LENGTH]) for i in range(0, len(self.cells), MAP_LENGTH)]
         for row in rows:
             print(row)
+        print('_'*MAP_LENGTH)
 
     def decrypt_mapdata(self, raw_data, raw_key):
         key = unquote(''.join([chr(int(raw_key[i:i+2], 16)) for i in range(0, len(raw_key), 2)]))

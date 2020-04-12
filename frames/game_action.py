@@ -1,4 +1,4 @@
-from data.map import unhash_cell
+from utils.map import unhash_cell
 import logging
 from ia.game_state import GameState
 
@@ -13,14 +13,15 @@ class GameAction:
         if raw_data.startswith('GA;1;'):    # MobGroup move
             entity_id = int(data[2])
             cell = int(self.get_cell(data[3]))
-            logging.debug('GroupMob moving to {}'.format(cell))
+            logging.debug('GroupMob {} moving to {}'.format(entity_id, cell))
             game_state.update_entity(entity_id, cell)
 
         elif raw_data.startswith('GA0;1'):  # PlayerMove
             # map_id = data[2]
+            entity_id = int(data[1])
             cell = int(self.get_cell(data[3]))
-            logging.info('Player moving to {}'.format(cell))
-            game_state.update_entity(0, cell)
+            logging.info('Player {} moving to {}'.format(entity_id, cell))
+            game_state.update_player_pos(cell)
 
     def get_cell(self, raw_cell):
             cell_data = unhash_cell(raw_cell[len(raw_cell)-2:])
