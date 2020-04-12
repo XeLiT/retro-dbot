@@ -1,4 +1,5 @@
 from frames.map_frame import Entity
+from config import PLAYER_NAME
 
 class GameState:
     def __init__(self):
@@ -23,16 +24,17 @@ class GameState:
             self.update()
 
     def update_entity(self, entity_id, cell):
-        entity = next((e for e in self.entities if e.id == entity_id and e.id < 0), None)
+        entity = next((e for e in self.entities if hasattr(e, 'id') and e.id == entity_id and e.id < 0), None)
         if entity:
             entity.cell = cell
             self.update_entities()
 
     def update_player_pos(self, cell):
-        if self.map:
-            self.entities.append()
-            self.map.cells[cell].entity = Entity(type='Player')
-            self.update_entities()
+        entity = next((e for e in self.entities if hasattr(e, 'name') and e.name == PLAYER_NAME), None)
+        if entity:
+            self.entities.remove(entity)
+        self.entities.append(Entity(type='Player', cell=cell, name=PLAYER_NAME))
+        self.update_entities()
 
 
     def update_map(self, new_map):
