@@ -8,14 +8,12 @@ DATA = 'GDM|8482|0907100942|40472451204e504d712c3e253235334848235d7163347a5f7f6b
 
 # GDM
 class MapChange:
-    def __init__(self, raw, game_state=None):
+    def __init__(self, raw):
         data = raw[4:].split('|')
         map_id = data[0]
         map_date = data[1]
         map_key = data[2]
         self.map = Map(map_id, map_date, map_key)
-        if game_state:
-            game_state.update_map(self.map)
 
 
 if __name__ == '__main__':

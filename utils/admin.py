@@ -39,8 +39,6 @@ class ERROR(enum.IntEnum):
 
 def ask_admin_access():
     if not ctypes.windll.shell32.IsUserAnAdmin():
-        hinstance = ctypes.windll.shell32.ShellExecuteW(
-            None, 'runas', sys.executable, sys.argv[0], None, SW.SHOWNORMAL
-        )
+        hinstance = ctypes.windll.shell32.ShellExecuteW(None, 'runas', sys.executable, sys.argv[0], None, SW.SHOWNORMAL)
         if hinstance <= 32:
             raise RuntimeError(ERROR(hinstance))
