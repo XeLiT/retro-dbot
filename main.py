@@ -7,7 +7,7 @@ from gui.master import MasterGUI
 from config import NETWORK_INTERFACE, LOGGING_LEVEL
 
 # Frames
-from frames.map_discover import MapDiscover
+from frames.map_infos import MapInfos
 from frames.map_change import MapChange
 from frames.game_action import GameAction
 
@@ -15,7 +15,7 @@ from frames.game_action import GameAction
 from ia.game_state import GameState
 
 # Utils
-from utils.admin import ask_admin_access
+from utils.admin import *
 
 
 class NetworkSniffer(threading.Thread):
@@ -34,7 +34,7 @@ class NetworkSniffer(threading.Thread):
             for raw_data in data:
                 logging.debug('   Data: {}'.format(raw_data))
                 if raw_data.startswith('GM'):
-                    self.game_state.update_entities(MapDiscover(raw_data))
+                    self.game_state.update_entities(MapInfos(raw_data))
                 elif raw_data.startswith('GDM'):
                     self.game_state.update_map(MapChange(raw_data))
                 elif raw_data.startswith('GA'):
@@ -45,7 +45,9 @@ if __name__ == '__main__':
     logging.basicConfig(level=LOGGING_LEVEL)
     ask_admin_access()
     gui = MasterGUI()
-    game_state = GameState(None)
+    game_state = GameState(gui)
     ns = NetworkSniffer(game_state)
     ns.start()
     gui.mainloop()
+    if ns in threading.enumerate():
+        interrupt_thread(ns.ident)

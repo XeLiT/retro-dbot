@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import unquote
 from yaswfp import swfparser
 from config import MAP_DIR
@@ -20,22 +21,25 @@ class Map:
         self.cells = [Cell(i) for i in raw_cells]
 
     def debug(self):
+        for row in self.matrixfy():
+            print(''.join(list(map(str, row))))
+        print('_'*MAP_WIDTH)
+
+    def matrixfy(self) -> [[Cell]]:
         rows = []
         i = 0
         row_number = 0
         while row_number < MAP_HEIGHT:
             if row_number % 2 == 0:
-                take = MAP_LENGTH - 1
+                take = MAP_WIDTH - 1
                 rows.append(self.cells[i:i+take])
                 i += take
             else:
-                take = MAP_LENGTH
+                take = MAP_WIDTH
                 rows.append(self.cells[i:i+take])
                 i += take
             row_number += 1
-        for row in rows:
-            print(''.join(list(map(str, row))))
-        print('_'*MAP_LENGTH)
+        return rows
 
     def decrypt_mapdata(self, raw_data, raw_key):
         key = unquote(''.join([chr(int(raw_key[i:i+2], 16)) for i in range(0, len(raw_key), 2)]))
@@ -53,5 +57,6 @@ class Map:
     def place_entities(self, entities: [Entity]):
         indexed_by_cell = Collection(entities).index_by('cell')
         for cell in indexed_by_cell.keys():
-            self.cells[int(cell)] = indexed_by_cell[cell]
+            logging.debug(cell)
+            self.cells[int(cell)].set_entity(indexed_by_cell[cell])
 

@@ -1,14 +1,17 @@
 from utils.entity import Entity
+import logging
 
 # DATA = 'GM|+379;1;22;-3;79,48;-3;1560^105,1569^105;8,14;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;|+268;3;33;-1;59,47,47,31,31,103;-3;1565^100,1001^90,1001^90,1563^100,1563^110,1020^95;5,23,23,4,6,14;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;|+453;1;0;-2;31,47,47;-3;1563^90,1001^90,1001^90;2,23,23;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;-1,-1,-1;0,0,0,0;'
-DATA = 'GM|+37;3;0;80146042;Xelit;8;80^100;0;0,0,0,80146114;0;ffffff;0;155,a51,3b9,,;0;;;La Quarantaine;f,9zldr,2,7rj1h;0;;'
+DATA = 'GM|+503;3;0;-1;568;-4;9073^100;0;-1;-1;-1;0,0,0,0,0;;0'
 
 
 # GM
-class MapDiscover:
+class MapInfos:
     def __init__(self, raw_data):
         self.entities = []
+        self.action = '+'
         self.parse_data(raw_data)
+        logging.debug(self)
 
     def __repr__(self):
         return '\n'.join(map(str, self.entities)) if len(self.entities) else ''
@@ -23,6 +26,7 @@ class MapDiscover:
                 cell = int(infos[0])
                 template = infos[4]
                 type = int(infos[5]) if ',' not in infos[5] else int(infos[5].split(',')[0])
+                entity_id = int(infos[3])
 
                 # SWITCH
                 if type == -1:  # creature
@@ -30,7 +34,6 @@ class MapDiscover:
                 elif type == -2:  # mob
                     # if not self.game_state.isFighting:
                     #    return
-                    entity_id = int(infos[3])
                     # monster_team = infos[15] if len(infos) <= 18 else infos[22]
                     self.entities.append(Entity('Mob', cell=cell, id=entity_id, pa=infos[12], health=infos[13], pm=infos[14]))
                 elif type == -3:  # group of mob
@@ -45,9 +48,16 @@ class MapDiscover:
                 elif type == -6:  # resources
                     pass
                 else:  # players
-                    self.entities.append(Entity('Player', cell=cell, id=1, map_id=infos[2], name=infos[4], guild=infos[16]))
+                    self.entities.append(Entity('Player', cell=cell, id=entity_id, name=infos[4]))
+
+            elif instances[0] == '-':  # player leave
+                entity_id = int(instances[1:])
+                self.action = '-'
+                self.entities.append(Entity('Player' if entity_id > 0 else 'GroupMob', cell=0, id=entity_id))
+
+
 
 
 if __name__ == '__main__':
-    m = MapDiscover(DATA)
+    m = MapInfos(DATA)
     print(m)

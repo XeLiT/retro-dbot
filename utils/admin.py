@@ -1,6 +1,6 @@
-import ctypes
 import enum
 import sys
+import ctypes
 
 # Reference:
 # msdn.microsoft.com/en-us/library/windows/desktop/bb762153(v=vs.85).aspx
@@ -42,3 +42,17 @@ def ask_admin_access():
         hinstance = ctypes.windll.shell32.ShellExecuteW(None, 'runas', sys.executable, sys.argv[0], None, SW.SHOWNORMAL)
         if hinstance <= 32:
             raise RuntimeError(ERROR(hinstance))
+
+
+# http://docs.python.org/c-api/init.html#PyThreadState_SetAsyncExc
+def interrupt_thread(thread_id):
+    ret = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, ctypes.py_object(KeyboardInterrupt))
+    if ret == 0:
+        raise ValueError("Invalid thread ID")
+    elif ret > 1:
+        ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
+        raise SystemError("PyThreadState_SetAsyncExc failed")
+    print("Interrupted {}".format(thread_id))
+
+
+

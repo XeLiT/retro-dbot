@@ -1,5 +1,6 @@
 import tkinter as tk
 from gui.table import Table
+from utils.contants import *
 
 
 class MasterGUI(tk.Tk):
@@ -9,7 +10,7 @@ class MasterGUI(tk.Tk):
         tk.Label(self, text="GameMapStatus").grid(column=1, row=0)
         self.stop_button = tk.Button(self, text="Stop", relief=tk.FLAT)
         self.stop_button.grid(row=1)
-        self.table = Table(self, 15, 15)
+        self.table = Table(self, rows=MAP_HEIGHT, columns=MAP_WIDTH)
         self.table.grid(row=1, column=1, rowspan=15)
 
     def set_stop_button_action_handler(self, handler):
