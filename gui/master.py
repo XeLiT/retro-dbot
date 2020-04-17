@@ -10,8 +10,15 @@ class MasterGUI(tk.Tk):
         tk.Label(self, text="GameMapStatus").grid(column=1, row=0)
         self.stop_button = tk.Button(self, text="Stop", relief=tk.FLAT)
         self.stop_button.grid(row=1)
-        self.table = Table(self, rows=MAP_HEIGHT, columns=MAP_WIDTH)
-        self.table.grid(row=1, column=1, rowspan=15)
+        self.table = None
+        self.init_table(19, 42)
+
+    def init_table(self, width, height):
+        if self.table:
+            self.table.pack_forget()
+            self.table.destroy()
+        self.table = Table(self, rows=height, columns=width)
+        self.table.grid(row=1, column=1, rowspan=height)
 
     def set_stop_button_action_handler(self, handler):
         self.stop_button.bind("<Button-1>", handler)

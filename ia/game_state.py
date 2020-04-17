@@ -43,4 +43,5 @@ class GameState:
         self.entities = []
         self.lastMap = self.map
         self.map = map_change.map
+        self.gui.init_table(self.map.width, self.map.height)
         self.update()

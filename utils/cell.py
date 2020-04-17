@@ -21,6 +21,8 @@ class Cell:
         self.layerObject2Num = ((cd[0]&2)<<12) + ((cd[7]&1)<<12) + (cd[8]<<6) + cd[9]
         self.isSun = self.layerObject1Num in SUN_MAGICS or self.layerObject2Num in SUN_MAGICS
         self.text = str(self.movement)
+
+    def set_default_color(self):
         if self.isSun:
             self.color = 'yellow'
             self.text = 'S'
@@ -29,9 +31,13 @@ class Cell:
             self.color = 'white'
 
     def set_entity(self, entity):
-        self.entity = entity
-        self.color = 'red'
-        self.text = self.entity.type[0]
+        if not entity:
+            self.entity = None
+            self.set_default_color()
+        else:
+            self.entity = entity
+            self.color = 'red'
+            self.text = self.entity.type[0]
 
     def __str__(self):
         return self.text

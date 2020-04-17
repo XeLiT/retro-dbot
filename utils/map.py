@@ -1,6 +1,6 @@
 import logging
 from urllib.parse import unquote
-from yaswfp import swfparser
+import yaswfp.swfparser as swfparser
 from config import MAP_DIR
 from utils.refs.pos import MAPID_TO_POS
 from utils.entity import Entity
@@ -15,7 +15,10 @@ class Map:
         pos = MAPID_TO_POS[id]
         self.x = pos[0]
         self.y = pos[1]
-        raw_map_data = swfparser.parsefile(self.path).tags[2].Actions[0].ConstantPool[14]
+        swf = swfparser.parsefile(self.path)
+        raw_map_data = swf.tags[2].Actions[0].ConstantPool[14]
+        self.width = int(swf.tags[2].Actions[17].Integer)
+        self.height = (int(swf.tags[2].Actions[20].Integer) - 1) * 2
         data = self.decrypt_mapdata(raw_map_data, raw_key)
         raw_cells = [data[i:i+10] for i in range(0, len(data), 10)]
         self.cells = [Cell(i) for i in raw_cells]
@@ -23,19 +26,19 @@ class Map:
     def debug(self):
         for row in self.matrixfy():
             print(''.join(list(map(str, row))))
-        print('_'*MAP_WIDTH)
+        print('_'*self.width)
 
     def matrixfy(self) -> [[Cell]]:
         rows = []
         i = 0
         row_number = 0
-        while row_number < MAP_HEIGHT:
+        while row_number < self.height:
             if row_number % 2 == 0:
-                take = MAP_WIDTH - 1
+                take = self.width - 1
                 rows.append(self.cells[i:i+take])
                 i += take
             else:
-                take = MAP_WIDTH
+                take = self.width
                 rows.append(self.cells[i:i+take])
                 i += take
             row_number += 1
@@ -52,11 +55,16 @@ class Map:
 
     def remove_entities(self):
         for c in self.cells:
-            c.entity = None
+            c.set_entity(None)
 
     def place_entities(self, entities: [Entity]):
         indexed_by_cell = Collection(entities).index_by('cell')
         for cell in indexed_by_cell.keys():
-            logging.debug(cell)
             self.cells[int(cell)].set_entity(indexed_by_cell[cell])
 
+
+if __name__ == '__main__':
+    path = 'C:/Users/thomas/AppData/Local/Ankama/zaap/retro/resources/app/retroclient/data/maps/5_0706131721X.swf'
+    swff = swfparser.parsefile(path)
+    width = int(swff.tags[2].Actions[17].Integer)
+    height = int(swff.tags[2].Actions[20].Integer)

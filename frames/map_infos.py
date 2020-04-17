@@ -35,7 +35,7 @@ class MapInfos:
                     # if not self.game_state.isFighting:
                     #    return
                     # monster_team = infos[15] if len(infos) <= 18 else infos[22]
-                    self.entities.append(Entity('Mob', cell=cell, id=entity_id, pa=infos[12], health=infos[13], pm=infos[14]))
+                    self.entities.append(Entity('Mob', cell=cell, id=entity_id, template=template, pa=infos[12], health=infos[13], pm=infos[14]))
                 elif type == -3:  # group of mob
                     templates = list(map(int, template.split(',')))
                     levels = list(map(int, infos[7].split(',')))
@@ -50,8 +50,8 @@ class MapInfos:
                 else:  # players
                     self.entities.append(Entity('Player', cell=cell, id=entity_id, name=infos[4]))
 
-            elif instances[0] == '-':  # player leave
-                entity_id = int(instances[1:])
+            elif instance[0] == '-':  # player leave
+                entity_id = int(instance[1:])
                 self.action = '-'
                 self.entities.append(Entity('Player' if entity_id > 0 else 'GroupMob', cell=0, id=entity_id))
 
