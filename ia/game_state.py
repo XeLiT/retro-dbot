@@ -1,47 +1,78 @@
 import logging
-from utils.collection import Collection
+from utils.collection import Collection, Dictionary
 from utils.entity import Entity
 from utils.map import Map
 from frames.map_infos import MapInfos
-from config import PLAYER_NAME
+from frames.game_action import GameAction
+from frames.game_fight import GameFight
 
 
 class GameState:
-    def __init__(self, gui):
+    def __init__(self, gui, player_name):
+        self.player_name = player_name
+        self.player_entity_id = 0
         self.map: Map = None
-        self.lastMap = None
-        self.playerCell = 0
-        self.isFighting = False
-        self.entities = []
+        self.is_fighting = False
+        self.entities: [Entity] = []
         self.map_id = 0
         self.gui = gui
+        self.game_fight: GameFight = GameFight()
+        self._map_needs_update = False
 
-    def update(self):
+    def update_gui(self):
+        self._find_player()
         if self.map:
             self.map.remove_entities()
             self.map.place_entities(self.entities)
             self.gui.table.set_data(self.map.matrixfy())
 
-    def update_entities(self, map_infos: MapInfos):
-        if map_infos.action == '+' and not self.entities:
-            self.entities = map_infos.entities
-        elif self.entities and map_infos.entities:
-            entity_id = map_infos.entities[0].id
-            if map_infos.action == '-':
-                self.entities = list(filter(lambda x: x.id != entity_id))
-            else:
-                self.entities.append(map_infos.entities[0])
-        self.update()
-
-    def update_entity(self, game_action):
-        entity = Collection(self.entities).find_one(id=game_action.entity_id)
+    def update_player_gui(self):
+        entity = Collection(self.entities).find_one(id=self.player_entity_id)
+        entity = entity if entity else Collection(self.entities).find_one(name=self.player_name)
         if entity:
-            entity.cell = game_action.cell
-            self.update()
+            self.gui.update_player_info(entity)
+
+    def _find_player(self):
+        if not self.player_entity_id:
+            entity = Collection(self.entities).find_one(name=self.player_name)
+            if entity:
+                self.player_entity_id = entity.id
+                logging.info("Found Player id: {}".format(self.player_entity_id))
+
+    def update_map_infos(self, map_infos: MapInfos):
+        if map_infos.action == '+':
+            self.entities = map_infos.entities if not self.entities else self.entities + map_infos.entities
+        elif map_infos.action == '-':
+            entity_id = map_infos.entities[0].id
+            self.entities = list(filter(lambda x: x.id != entity_id, self.entities))
+        self.update_gui()
+        self.update_player_gui()
+
+    def update_entities(self, entities: [Entity]):
+        for e in entities:
+            to_update = Collection(self.entities).find_one(id=e.id)
+            if to_update:
+                to_update.__dict__.update(Dictionary(e.__dict__).filter_keys(['health', 'pa', 'pm']))
+
+    def update_from_action(self, game_action: GameAction):
+        if game_action.is_enter_fight:
+            self.set_fighting(True)
+        elif game_action.is_moving:
+            entity = Collection(self.entities).find_one(id=game_action.entity_id)
+            if entity:
+                entity.cell = game_action.cell
+                self.update_gui()
+        elif game_action.modifier:
+            game_action.modifier.apply(Collection(self.entities).find_one(id=game_action.modifier.entity))
+            self.update_player_gui()
 
     def update_map(self, map_change):
         self.entities = []
-        self.lastMap = self.map
         self.map = map_change.map
         self.gui.init_table(self.map.width, self.map.height)
-        self.update()
+
+    def set_fighting(self, fighting):
+        self.is_fighting = fighting
+        self.entities = []
+        logging.info('Fighting {}'.format(fighting))
+        self.gui.set_fighting_state(fighting)

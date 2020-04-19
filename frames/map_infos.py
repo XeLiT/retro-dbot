@@ -32,8 +32,6 @@ class MapInfos:
                 if type == -1:  # creature
                     pass
                 elif type == -2:  # mob
-                    # if not self.game_state.isFighting:
-                    #    return
                     # monster_team = infos[15] if len(infos) <= 18 else infos[22]
                     self.entities.append(Entity('Mob', cell=cell, id=entity_id, template=template, pa=infos[12], health=infos[13], pm=infos[14]))
                 elif type == -3:  # group of mob

@@ -1,7 +1,12 @@
 class Entity:
-    def __init__(self, type, cell=0, **kwargs):
+    def __init__(self, type=None, cell=0, **kwargs):
         self.type = type
+        self.name = ''
         self.cell = cell
+        self.health = 0
+        self.pa = 0
+        self.pm = 0
+        self.dead = False
         self.__dict__.update(kwargs)
 
     def __str__(self):

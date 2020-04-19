@@ -33,4 +33,6 @@ class Table(tk.Frame):
                 widget.bind('<Button-1>', lambda e, a=i, b=j: self.debug_cell(a, b))
 
     def debug_cell(self, i, j):
-        logging.info(self.cells[i][j].__dict__)
+        cell = self.cells[i][j]
+        logging.info(cell)
+        logging.info(cell.entity)

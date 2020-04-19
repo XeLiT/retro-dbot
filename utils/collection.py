@@ -29,6 +29,17 @@ class Collection:
                 yield item
 
 
+class Dictionary:
+    def __init__(self, dictionary) -> None:
+        self.dictionary = dictionary
+
+    def filter_keys(self, keys: [""]):
+        ret = {}
+        for key in keys:
+            ret[key] = self.dictionary[key]
+        return ret
+
+
 class A:
     def __init__(self, **kwargs) -> None:
         self.__dict__.update(kwargs)

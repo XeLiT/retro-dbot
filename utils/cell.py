@@ -7,7 +7,6 @@ def unhash_cell(raw_cell):
 
 class Cell:
     def __init__(self, raw_data):
-        self.raw_data = raw_data
         self.entity = None
         self.color = 'black'
         cd = unhash_cell(raw_data)
@@ -25,16 +24,16 @@ class Cell:
     def set_default_color(self):
         if self.isSun:
             self.color = 'yellow'
-            self.text = 'S'
-        elif self.isActive:
-            self.text = ' '
+        elif self.movement == 0 and self.lineOfSight:
+            self.color = 'grey'
+        elif self.lineOfSight:
             self.color = 'white'
 
     def set_entity(self, entity):
         if not entity:
             self.entity = None
             self.set_default_color()
-        else:
+        elif not entity.dead:
             self.entity = entity
             self.color = 'red'
             self.text = self.entity.type[0]
