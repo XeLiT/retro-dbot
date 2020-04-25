@@ -7,7 +7,7 @@ END_FIGHT = 'GCK|1|Xelit'
 
 """
 DEBUG:root:   Data: GIC|80146042;252;1
-DEBUG:root:   Data: GR180146042
+DEBUG:root:   Data: GR180146042  # READY
 DEBUG:root:   Data: GIC|-1;182;1|80146042;252;1
 DEBUG:root:   Data: GS
 DEBUG:root:   Data: GTL|80146042|-1
@@ -64,10 +64,22 @@ class GameFight:
         logging.info('Turn {}'.format(self.entity_turn))
 
     @staticmethod
-    def parse_fight_state(raw_data):  # GTM|-1;0;75;7;4;326;;179|80146042;0;534;8;5;342;;534|-2;0;62;7;4;224;;178
+    def parse_fight_state(raw_data):  # GTM|-1;0;190;7;4;222;;190|-2;1|-3;1|80146042;0;534;8;5;311;;534
         infos = raw_data[4:].split('|')
         entities = []
         for info in infos:
-            data = list(map(lambda x: int(x) if x.isdigit() else x, info.split(';')))
-            entities.append(Entity(id=data[0], health=data[2], pa=data[3], pm=data[4], cell=data[5]))
+            data = list(map(lambda x: int(x) if x.lstrip('-').isdigit() else x, info.split(';')))
+            if data[1] == 1:
+                entities.append(Entity(id=data[0], dead=True))
+            elif len(data) > 5:
+                entities.append(Entity(id=data[0], health=data[2], pa=data[3], pm=data[4], cell=data[5]))
         return entities
+
+    @staticmethod
+    def parse_fight_ready(raw_data):  # GR180146042
+        state = int(raw_data[2])
+        id = int(raw_data[3:])
+        return {"entity_id": id, "ready_state": True if state > 0 else False}
+
+if __name__ == '__main__':
+    GameFight.parse_fight_ready('GR180146042')

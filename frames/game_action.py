@@ -51,7 +51,5 @@ class GameAction:
         self.cell = int(entity[1])
         return self
 
-    # TODO
-
 if __name__ == '__main__':
     ga = GameAction(DATA)

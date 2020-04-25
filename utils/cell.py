@@ -6,9 +6,14 @@ def unhash_cell(raw_cell):
 
 
 class Cell:
-    def __init__(self, raw_data):
+    def __init__(self, raw_data=None):
         self.entity = None
         self.color = 'black'
+        self.text = ' '
+        if raw_data:
+            self.parse_data(raw_data)
+
+    def parse_data(self, raw_data):
         cd = unhash_cell(raw_data)
         self.isActive = (cd[0] & 32 >> 5) == 1
         self.lineOfSight = (cd[0] & 1) == 1
@@ -40,3 +45,4 @@ class Cell:
 
     def __str__(self):
         return self.text
+

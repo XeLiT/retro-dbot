@@ -13,7 +13,7 @@ from frames.game_action import GameAction
 from frames.game_fight import GameFight
 
 # Ia
-from ia.game_state import GameState
+from ai.game_state import GameState
 
 # Utils
 from utils.admin import *
@@ -46,6 +46,8 @@ class NetworkSniffer(threading.Thread):
                     self.game_state.game_fight.set_fight_start_cells(raw_data)
                 elif raw_data.startswith('GIC'):
                     self.game_state.update_from_action(GameAction().parse_entity_start_cell(raw_data))
+                elif raw_data.startswith('GR'):
+                    self.game_state.set_player_ready(**GameFight.parse_fight_ready(raw_data))
                 elif raw_data.startswith('GTS'):
                     self.game_state.game_fight.set_entity_turn(raw_data)
                 elif raw_data.startswith('GTM'):

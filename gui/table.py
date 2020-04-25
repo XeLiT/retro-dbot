@@ -4,14 +4,14 @@ import logging
 
 
 class Table(tk.Frame):
-    def __init__(self, parent, rows=19, columns=42):
+    def __init__(self, parent, rows=42, columns=42):
         tk.Frame.__init__(self, parent)
         self._widgets = []
         self.cells = []
         for row in range(rows):
             current_row = []
             for column in range(columns):
-                label = tk.Label(self, text=" ", borderwidth=0, width=5)
+                label = tk.Label(self, text=" ", borderwidth=0, width=2)
                 label.grid(row=row, column=column, sticky="nsew", padx=0, pady=0)
                 current_row.append(label)
             self._widgets.append(current_row)

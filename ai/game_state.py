@@ -52,7 +52,9 @@ class GameState:
         for e in entities:
             to_update = Collection(self.entities).find_one(id=e.id)
             if to_update:
-                to_update.__dict__.update(Dictionary(e.__dict__).filter_keys(['health', 'pa', 'pm']))
+                to_update.__dict__.update(Dictionary(e.__dict__).filter_keys(['health', 'pa', 'pm', 'dead', 'cell']))
+                logging.info('Update Entity {}'.format(e))
+        self.update_player_gui()
 
     def update_from_action(self, game_action: GameAction):
         if game_action.is_enter_fight:
@@ -64,15 +66,20 @@ class GameState:
                 self.update_gui()
         elif game_action.modifier:
             game_action.modifier.apply(Collection(self.entities).find_one(id=game_action.modifier.entity))
-            self.update_player_gui()
+        self.update_player_gui()
 
     def update_map(self, map_change):
         self.entities = []
         self.map = map_change.map
-        self.gui.init_table(self.map.width, self.map.height)
+        self.gui.init_table(self.map.height, self.map.height)
 
     def set_fighting(self, fighting):
         self.is_fighting = fighting
         self.entities = []
         logging.info('Fighting {}'.format(fighting))
         self.gui.set_fighting_state(fighting)
+
+    def set_player_ready(self, entity_id=0, ready_state=False):
+        entity = Collection(self.entities).find_one(id=entity_id)
+        entity.ready = ready_state
+        logging.info('set_player_ready: {} {}'.format(entity_id, ready_state))

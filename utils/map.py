@@ -1,4 +1,5 @@
 import logging
+import math
 from urllib.parse import unquote
 import yaswfp.swfparser as swfparser
 from config import MAP_DIR
@@ -30,19 +31,19 @@ class Map:
 
     def matrixfy(self) -> [[Cell]]:
         rows = []
-        i = 0
-        row_number = 0
+        i = self.width - 1
+        row_number = 1
         while row_number < self.height:
             if row_number % 2 == 0:
                 take = self.width - 1
-                rows.append(self.cells[i:i+take])
+                rows.append(self.cells[i+1:i+take] + [Cell()])
                 i += take
             else:
                 take = self.width
-                rows.append(self.cells[i:i+take])
+                rows.append(self.cells[i+1:i+take])
                 i += take
             row_number += 1
-        return rows
+        return Map.rotate(rows)
 
     def decrypt_mapdata(self, raw_data, raw_key):
         key = unquote(''.join([chr(int(raw_key[i:i+2], 16)) for i in range(0, len(raw_key), 2)]))
@@ -62,9 +63,52 @@ class Map:
         for cell in indexed_by_cell.keys():
             self.cells[int(cell)].set_entity(indexed_by_cell[cell])
 
+    @staticmethod
+    def _diag(matrix, size_i, size_j, i, j):
+        padding = [Cell()] * j + [Cell()] * int(i / 2)
+        l = j
+        data = []
+        for k in range(i, size_i):  # loop on rows
+            if l >= size_j:
+                break
+            data.append(matrix[k][l])
+            if k % 2 == 1:
+                l += 1
+        ret = padding + data + padding
+        paddr_len = size_i - len(ret)
+        if paddr_len > 0:
+            ret += [Cell()] * paddr_len
+        return ret
+
+    @staticmethod
+    def rotate(matrix):
+        size_i = len(matrix)
+        size_j = len(matrix[0])
+
+        diags = [Map._diag(matrix, size_i, size_j, 0, 0)]
+        for j in range(1, size_j):  # right side
+            diags.append(Map._diag(matrix, size_i, size_j, 0, j))
+
+        for i in range(2, size_i, 2):  # low side
+            diags.insert(0, Map._diag(matrix, size_i, size_j, i, 0))
+
+        matrix_out = []
+        for j in range(len(diags[0])):
+            matrix_out.append([])
+            for i in range(len(diags)):
+                matrix_out[j].append(diags[i][j])
+        return matrix_out
+
 
 if __name__ == '__main__':
-    path = 'C:/Users/thomas/AppData/Local/Ankama/zaap/retro/resources/app/retroclient/data/maps/5_0706131721X.swf'
-    swff = swfparser.parsefile(path)
-    width = int(swff.tags[2].Actions[17].Integer)
-    height = int(swff.tags[2].Actions[20].Integer)
+    DATA = '364b23364e7c58203471383e6a517d573d5b316144232451213543776a267e5830364e74646867274875594c235f4b214f495e3172253242644a415e35477d4a6c32697d34282837652532352a452e262c7d732532356e3c443131726467515970542e6961413d5228374723716a656740204d282679634967645c5b492e594f683d375f4a7d5e71413b322f642930336c4f582667234f426c665f3b7435622f582a3a356c6850427a665b6e7d29745e5336562c6b6e3978253235433e24742e7e5e704265752132402064645b73'
+    m = Map('7438', '0706131721', DATA)
+    m.debug()
+    # matrix = ['abc', 'def', 'ghi', 'jkl', 'mno', 'pqr']
+    # Map.rotate(matrix)
+
+
+
+
+
+
