@@ -1,5 +1,6 @@
 from math import inf, sqrt
 from collections import defaultdict
+import heapq
 
 DATA = """.................................................
 .................................................
@@ -68,6 +69,7 @@ class Node:
         self.obj = obj
         self.traveled = inf  # lower is better
         self.previous: Node
+        self.visited = False
 
         # a-star
         self.distance_to_target = inf
@@ -85,10 +87,13 @@ class Node:
 
     def __repr__(self):
         return self.obj.__repr__()
+        #return self.score.__repr__()
 
     def __eq__(self, o) -> bool:
         return self.obj == o.obj
 
+    def __lt__(self, other):
+        return self.score < other.score
 
 class Graph:
     def __init__(self, nodes: [Node], initial=None, target=None):
@@ -126,30 +131,41 @@ class Graph:
             queue.sort(key=lambda x: x.traveled)
 
         print(d1, d2)
+        return [] if not found else self._build_path()
+
+    def _build_path(self):
         path = []
-        if found:
-            n = self.target
-            while n.traveled != 0:
-                path.append(n)
-                n = n.previous
+        n = self.target
+        while n.traveled != 0:
+            path.append(n)
+            n = n.previous
         return path
 
     def astar(self) -> [Node]:
+        self.initial.traveled = 0
         self.initial.set_score(self.target, 0)
         queue = [self.initial]
+        heapq.heapify([self.initial])
         found = False
+        d1, d2 = 0, 0
 
         while len(queue) and not found:
-            from_node = queue[0]
-            queue.remove(from_node)
+            from_node = heapq.heappop(queue)
+            from_node.visited = True
             edges = self.edges[id(from_node)]
             for edge in edges:
                 node = edge.node
-                node.set_score(self.target, edge.weight)
-                node.previous = from_node
-                queue.append(node)
-            queue.sort(key=lambda x: x.score)
-
+                d1 += 1
+                if not node.visited:
+                    d2 += 1
+                    node.set_score(self.target, edge.weight)
+                    node.previous = from_node
+                    if node == self.target:
+                        found = True
+                        break
+                    heapq.heappush(queue, node)
+        print(d1, d2)
+        return [] if not found else self._build_path()
 
 
     @staticmethod
@@ -170,7 +186,9 @@ class Graph:
         return graph
 
 if __name__ == '__main__':
-    rows = DATA1.split('\n')
+    # upvote https://stackoverflow.com/questions/7803121/in-python-heapq-heapify-doesnt-take-cmp-or-key-functions-as-arguments-like-sor
+
+    rows = DATA.split('\n')
     matrix2d = []
     for i in range(len(rows)):
         matrix2d.append([])
@@ -183,7 +201,7 @@ if __name__ == '__main__':
         elif node.obj['s'] == 'E':
             g.target = node
 
-    path = g.dijsktra()
+    path = g.astar()
     for node in path:
         coord = node.obj['coord']
         matrix2d[coord[0]][coord[1]]['s'] = 'o'
