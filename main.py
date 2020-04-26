@@ -7,10 +7,10 @@ from gui.master import MasterGUI
 from config import NETWORK_INTERFACE, LOGGING_LEVEL, PLAYER_NAME
 
 # Frames
-from frames.map_infos import MapInfos
-from frames.map_change import MapChange
-from frames.game_action import GameAction
-from frames.game_fight import GameFight
+from network.map_infos import MapInfos
+from network.map_change import MapChange
+from network.game_action import GameAction
+from network.game_fight import GameFight
 
 # Ia
 from ai.game_state import GameState

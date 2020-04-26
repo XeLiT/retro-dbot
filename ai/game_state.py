@@ -2,9 +2,9 @@ import logging
 from utils.collection import Collection, Dictionary
 from utils.entity import Entity
 from utils.map import Map
-from frames.map_infos import MapInfos
-from frames.game_action import GameAction
-from frames.game_fight import GameFight
+from network.map_infos import MapInfos
+from network.game_action import GameAction
+from network.game_fight import GameFight
 
 
 class GameState:
