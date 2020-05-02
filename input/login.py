@@ -1,7 +1,8 @@
 from input.window import Window
 from input.keyboard import Keyboard
-from config import PLAYERS
+from config import PLAYERS, BINARY
 import time
+import win32com.client
 
 COORD_USERNAME = (108, 192)
 COORD_PASSWORD = (108, 260)
@@ -17,10 +18,22 @@ def get_credentials(path):
     return {'username': text[0], 'password': text[1]}
 
 
-# TODO open process
 if __name__ == '__main__':
+    windows = Window.list_windows()
     creds = get_credentials(PLAYERS[0]['secret'])
-    xelit: Window = Window.list_windows()[0]
+
+    # initial_length = len(windows)
+    # shell = win32com.client.Dispatch("WScript.Shell")
+    # shell.Run(BINARY)
+    # shell.AppActivate("Dofus Retro")
+    #
+    # while len(windows) <= initial_length:
+    #     windows = Window.list_windows()
+    #     print(windows)
+    #     time.sleep(1)
+
+
+    xelit: Window = windows[0]
     kb = Keyboard(xelit)
     xelit.focus()
     xelit.frame.click(*COORD_USERNAME)

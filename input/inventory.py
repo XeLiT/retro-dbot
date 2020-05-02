@@ -9,11 +9,6 @@ class Inventory:
     def __init__(self, window: Window):
         self.window = window
 
-    def compute_pod(self):
-        # get line of pixel
-        # compute percentage of orange
-        pass
-
     def open_inventory(self):
         self.window.toggle_menu(2)
 

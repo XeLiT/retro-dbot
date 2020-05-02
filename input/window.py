@@ -18,7 +18,6 @@ PLAYER_MENU_GAP_X = 29.25
 PLAYER_MENU_ORDER = {'player': 0, 'spells': 1, 'inventory': 2}
 
 
-
 class Window:
     def __init__(self, hwnd, name):
         self.hwnd = hwnd
@@ -38,7 +37,8 @@ class Window:
         windows = list(filter(lambda x: 'Dofus Retro' in x.name, windows))
         for w in windows:
             children = w.get_children()
-            w.frame = children[0]
+            if children:
+                w.frame = children[0]
         return windows
 
     def get_children(self):
@@ -75,7 +75,6 @@ class Window:
         win32api.PostMessage(self.hwnd, win32con.WM_LBUTTONDBLCLK, wParam, lp)
         time.sleep(TICK)
         win32api.PostMessage(self.hwnd, win32con.WM_LBUTTONUP, wParam, lp)
-
 
     def click_cell(self, cell):
         y, x = divmod(cell, 14.5)

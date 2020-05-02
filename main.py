@@ -4,7 +4,7 @@ import struct
 import threading
 import logging
 from gui.master import MasterGUI
-from config import NETWORK_INTERFACE, LOGGING_LEVEL, PLAYER_NAME
+from config import NETWORK_INTERFACE, LOGGING_LEVEL, PLAYER_NAME, PLAYERS
 
 # Frames
 from network.map_infos import MapInfos
@@ -14,6 +14,7 @@ from network.game_fight import GameFight
 
 # Ia
 from ai.game_state import GameState
+from ai.player import Player
 
 # Utils
 from utils.admin import *
@@ -34,12 +35,18 @@ class NetworkSniffer(threading.Thread):
 
             for raw_data in data:
                 logging.debug('   Data: {}'.format(raw_data))
+
+                # Map
                 if raw_data.startswith('GM'):
                     self.game_state.update_map_infos(MapInfos(raw_data))
                 elif raw_data.startswith('GDM'):
                     self.game_state.update_map(MapChange(raw_data))
                 elif raw_data.startswith('GA'):
                     self.game_state.update_from_action(GameAction().parse_action(raw_data))
+
+                # Player
+                elif raw_data.startswith('Ow'):
+                    self.game_state.player_infos.parse_pods(raw_data)
 
                 # Fight
                 elif raw_data.startswith('GP'):
@@ -64,6 +71,8 @@ if __name__ == '__main__':
     game_state = GameState(gui, PLAYER_NAME)
     ns = NetworkSniffer(game_state)
     ns.start()
+    player = Player(PLAYERS[0], game_state)
+    player.start()
     gui.mainloop()
     if ns in threading.enumerate():
         interrupt_thread(ns.ident)

@@ -5,12 +5,14 @@ from utils.map import Map
 from network.map_infos import MapInfos
 from network.game_action import GameAction
 from network.game_fight import GameFight
+from network.player_infos import PlayerInfos
 
 
 class GameState:
     def __init__(self, gui, player_name):
         self.player_name = player_name
         self.player_entity_id = 0
+        self.player_infos = PlayerInfos()
         self.map: Map = None
         self.is_fighting = False
         self.entities: [Entity] = []

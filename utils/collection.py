@@ -17,7 +17,9 @@ class Collection:
     def find_all(self, **kwargs):
         return list(self._evaluator(kwargs))
 
-    def find_one(self, **kwargs):
+    def find_one(self, callback=None, **kwargs):
+        if callback:
+            return next(filter(callback, self.array), None)
         return next(self._evaluator(kwargs), None)
 
     def _evaluator(self, d):
