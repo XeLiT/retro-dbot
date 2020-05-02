@@ -1,4 +1,4 @@
 pyshark
 yaswfp
 pywin32
-Image
+pillow

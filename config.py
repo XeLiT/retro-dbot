@@ -9,3 +9,9 @@ MAP_DIR = 'C:/Users/thomas/AppData/Local/Ankama/zaap/retro/resources/app/retrocl
 
 # Sniffer
 NETWORK_INTERFACE = 'Ethernet'
+
+PLAYERS = [{
+    'name': 'Xelit',
+    'type': 'iop-air',
+    'secret': 'C:/Users/thomas/xelit.txt'
+}]

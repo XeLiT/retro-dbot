@@ -1,23 +1,35 @@
 from input.window import Window
-import win32api, win32gui
-import win32.lib.win32con as win32con
+from input.keyboard import Keyboard
+from config import PLAYERS
+import time
+
+COORD_USERNAME = (108, 192)
+COORD_PASSWORD = (108, 260)
+COORD_SUBMIT_BT = (160, 320)
+
+COORD_SERVER = (120, 304)
+COORD_PLAYER_1 = (120, 304)
+COORD_PLAY = (368, 443)
 
 
-COORD_USERNAME = (179, 145)
-COORD_PASSWORD = (179, 307)
-COORD_SUBMIT_BT = (162, 371)
-COORD_SERVER = (125, 365)
-COORD_PLAYER_1 = (125, 365)
+def get_credentials(path):
+    text = open(path).read().split('\n')
+    return {'username': text[0], 'password': text[1]}
 
+
+# TODO open process
 if __name__ == '__main__':
-    xelit = Window.list_windows()[0]
-    print(xelit)
+    creds = get_credentials(PLAYERS[0]['secret'])
+    xelit: Window = Window.list_windows()[0]
+    kb = Keyboard(xelit)
     xelit.focus()
-    # xelit.frame.capture()
-    xelit.click(*COORD_USERNAME)
-    # np_edit_wnd = win32gui.GetWindow(xelit.hwnd, win32con.GW_CHILD)
-    # print(xelit)
-    # print(np_edit_wnd)
-    # s = 'LLpeterpan'
-    # win32api.SendMessage(np_edit_wnd, win32con.WM_SETTEXT, 0, s)
+    xelit.frame.click(*COORD_USERNAME)
+    kb.delete()
+    kb.write(creds['username'])
+    time.sleep(0.5)
 
+    xelit.frame.click(*COORD_PASSWORD)
+    kb.delete()
+    kb.write(creds['password'])
+    xelit.click(*COORD_SUBMIT_BT)
+    # TODO wait for queue
