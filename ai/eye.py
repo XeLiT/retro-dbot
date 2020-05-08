@@ -1,8 +1,10 @@
 import cv2
 import time
+import config
 from input.window import Window
 
-IMAGE_DIR = '../utils/refs/'
+
+IMAGE_DIR = '../utils/refs/' if __name__ == '__main__' else config.MOTIF_DIR
 TICK = 0.5
 IMAGE_CLOSE_BUTTON = cv2.imread(IMAGE_DIR + 'close_button.png')
 IMAGE_MENU_END_FIGHT1 = cv2.imread(IMAGE_DIR + 'end_fight_menu_1.png')

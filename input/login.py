@@ -4,7 +4,6 @@ from config import PLAYERS, BINARY, VERSION
 from ai.eye import Eye, IMAGE_LOGIN_MOTIF, IMAGE_LOGIN_MOTIF1, IMAGE_LOGIN_MOTIF2
 import time
 import win32com.client
-import os
 
 COORD_USERNAME = (108, 192)
 COORD_PASSWORD = (108, 260)
@@ -50,6 +49,7 @@ class Login:
         self.kb: Keyboard = Keyboard(self.window)
 
     def login(self):
+        self.window.resize()
         self.window.focus()
         self.eye.wait_for_image(IMAGE_LOGIN_MOTIF)
         self.window.frame.click(*COORD_USERNAME)

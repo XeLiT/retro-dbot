@@ -3,6 +3,7 @@ import time
 from input.window import Window
 from input.keyboard import Keyboard
 from utils.collection import Collection
+from input.login import Login
 import config
 import logging
 
@@ -18,17 +19,19 @@ class Player(threading.Thread):
         self.game_state = game_state
         self.window = None
         self.keyboard = None
+        self.login = Login(player_info)
 
     def find_window(self):
-        while True:
-            windows = Window.list_windows()
-            w = Collection(windows).find_one(callback=lambda x: self.player_name in x.name)
-            if w:
-                self.window = w
-                self.keyboard = Keyboard(w)
-                break
-            logging.debug(f'Finding window for {self.player_name}')
-            time.sleep(1)
+        windows = Window.list_windows()
+        w = Collection(windows).find_one(callback=lambda x: self.player_name in x.name)
+        if not w:
+            self.login.login()
+            self.window = self.login.window
+            self.keyboard = self.login.kb
+        else:
+            self.window = w
+            self.keyboard = Keyboard(w)
+        logging.info(f'Found window for {self.player_name} !')
 
     def wait_until(self, callback, timeout=60):
         while timeout > 0:
@@ -39,10 +42,14 @@ class Player(threading.Thread):
         return timeout > 0
 
     def run(self):
-        self.find_window()
-        logging.info(f'Found window for {self.player_name} !')
-        self.wait_until(lambda x: x.player_entity_id != 0 and x.map)
-        logging.info('Player found !')
+        try:
+            self.find_window()
+            self.wait_until(lambda x: x.player_entity_id != 0 and x.map)
+            logging.info('Player found !')
+        except Exception as e:
+            logging.error(e)
+
+
 
 if __name__ == '__main__':
     p = Player(config.PLAYERS[0], None)
