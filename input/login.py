@@ -51,6 +51,7 @@ class Login:
 
     def login(self):
         self.window.focus()
+        self.eye.wait_for_image(IMAGE_LOGIN_MOTIF)
         self.window.frame.click(*COORD_USERNAME)
         self.kb.delete()
         self.kb.write(self.creds['username'])
