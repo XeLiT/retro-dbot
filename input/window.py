@@ -77,11 +77,12 @@ class Window:
         time.sleep(TICK)
         win32api.PostMessage(self.hwnd, win32con.WM_LBUTTONUP, wParam, lp)
 
-    def click_cell(self, cell):
+    def click_cell(self, cell, with_shift=False):
         y, x = divmod(cell, 14.5)
         _x = int(x * CELL_GAP_X)
         _y = int(y * (CELL_GAP_Y / 2))
-        self.click(_x, _y + CELL_Y_OFFSET)
+        wParam = 0 if not with_shift else win32con.MK_SHIFT
+        self.click(_x, _y + CELL_Y_OFFSET, wParam)
 
     def toggle_menu(self, index):
         x, y = PLAYER_MENU_OFFSETS

@@ -26,7 +26,7 @@ class GameState:
         if self.map:
             self.map.remove_entities()
             self.map.place_entities(self.entities)
-            self.gui.table.set_data(self.map.matrixfy())
+            self.gui.table.set_data(self.map.matrix)
 
     def update_player_gui(self):
         entity = Collection(self.entities).find_one(id=self.player_entity_id)
@@ -80,6 +80,8 @@ class GameState:
         self.entities = []
         logging.info('Fighting {}'.format(fighting))
         self.gui.set_fighting_state(fighting)
+        if fighting:
+            self.game_fight = GameFight()
 
     def set_player_ready(self, entity_id=0, ready_state=False):
         entity = Collection(self.entities).find_one(id=entity_id)

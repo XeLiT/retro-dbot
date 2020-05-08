@@ -4,14 +4,7 @@ from config import PLAYERS, BINARY, VERSION
 from ai.eye import Eye, IMAGE_LOGIN_MOTIF, IMAGE_LOGIN_MOTIF1, IMAGE_LOGIN_MOTIF2
 import time
 import win32com.client
-
-COORD_USERNAME = (108, 192)
-COORD_PASSWORD = (108, 260)
-COORD_SUBMIT_BT = (160, 320)
-
-COORD_SERVER = (120, 304)
-COORD_PLAYER_1 = (115, 323)
-COORD_PLAY = (365, 438)
+import input.coordinates as coord
 
 
 class Login:
@@ -52,22 +45,22 @@ class Login:
         self.window.resize()
         self.window.focus()
         self.eye.wait_for_image(IMAGE_LOGIN_MOTIF)
-        self.window.frame.click(*COORD_USERNAME)
+        self.window.frame.click(*coord.COORD_USERNAME)
         self.kb.delete()
         self.kb.write(self.creds['username'])
         time.sleep(0.5)
-        self.window.frame.click(*COORD_PASSWORD)
+        self.window.frame.click(*coord.COORD_PASSWORD)
         self.kb.delete()
         self.kb.write(self.creds['password'])
-        self.window.click(*COORD_SUBMIT_BT)
+        self.window.click(*coord.COORD_SUBMIT_BT)
 
         self.eye.wait_for_image(IMAGE_LOGIN_MOTIF1)
-        self.window.frame.click(*COORD_SERVER)
-        self.window.frame.click(*COORD_SERVER)
+        self.window.frame.click(*coord.COORD_SERVER)
+        self.window.frame.click(*coord.COORD_SERVER)
         self.eye.wait_for_image(IMAGE_LOGIN_MOTIF2)
         time.sleep(0.5)
-        self.window.frame.click(*COORD_PLAYER_1)
-        self.window.frame.click(*COORD_PLAY)
+        self.window.frame.click(*coord.COORD_PLAYER_1)
+        self.window.frame.click(*coord.COORD_PLAY)
 
 
 if __name__ == '__main__':

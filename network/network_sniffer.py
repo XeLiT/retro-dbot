@@ -11,9 +11,10 @@ from network.game_fight import GameFight
 
 
 class NetworkSniffer(threading.Thread):
-    def __init__(self, game_state):
+    def __init__(self, game_state, lock):
         super().__init__(daemon=True)
         self.game_state = game_state
+        self.lock = lock
 
     def run(self):
         capture = pyshark.LiveCapture(interface=config.NETWORK_INTERFACE, bpf_filter='tcp port 5555 and len > 66')
@@ -29,6 +30,7 @@ class NetworkSniffer(threading.Thread):
         binary = binascii.unhexlify(packet.data.data)
         data = filter(None, struct.unpack('!{}s'.format(len(binary)), binary)[0].decode('utf-8').replace('\n', '').split('\x00'))
 
+        self.lock.acquire()
         for raw_data in data:
             logging.debug('   Data: {}'.format(raw_data))
 
@@ -57,3 +59,4 @@ class NetworkSniffer(threading.Thread):
                 self.game_state.update_entities(GameFight.parse_fight_state(raw_data))
             elif raw_data.startswith('GCK'):  # and PLAYER_NAME in raw_data:                            # Fight end
                 self.game_state.set_fighting(False)
+        self.lock.release()

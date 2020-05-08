@@ -10,6 +10,7 @@ class Cell:
         self.entity = None
         self.color = 'black'
         self.text = ' '
+        self.posXY = []
         if raw_data:
             self.parse_data(raw_data)
 

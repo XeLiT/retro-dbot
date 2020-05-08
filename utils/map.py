@@ -1,5 +1,4 @@
 import logging
-import math
 from urllib.parse import unquote
 import yaswfp.swfparser as swfparser
 from config import MAP_DIR
@@ -23,11 +22,7 @@ class Map:
         data = self.decrypt_mapdata(raw_map_data, raw_key)
         raw_cells = [data[i:i+10] for i in range(0, len(data), 10)]
         self.cells = [Cell(i) for i in raw_cells]
-
-    def debug(self):
-        for row in self.matrixfy():
-            print(''.join(list(map(str, row))))
-        print('_'*self.width)
+        self.matrix = self.matrixfy()
 
     def matrixfy(self) -> [[Cell]]:
         rows = []
@@ -96,19 +91,7 @@ class Map:
         for j in range(len(diags[0])):
             matrix_out.append([])
             for i in range(len(diags)):
-                matrix_out[j].append(diags[i][j])
+                cell = diags[i][j]
+                cell.posXY = [i, j]
+                matrix_out[j].append(cell)
         return matrix_out
-
-
-if __name__ == '__main__':
-    DATA = '364b23364e7c58203471383e6a517d573d5b316144232451213543776a267e5830364e74646867274875594c235f4b214f495e3172253242644a415e35477d4a6c32697d34282837652532352a452e262c7d732532356e3c443131726467515970542e6961413d5228374723716a656740204d282679634967645c5b492e594f683d375f4a7d5e71413b322f642930336c4f582667234f426c665f3b7435622f582a3a356c6850427a665b6e7d29745e5336562c6b6e3978253235433e24742e7e5e704265752132402064645b73'
-    m = Map('7438', '0706131721', DATA)
-    m.debug()
-    # matrix = ['abc', 'def', 'ghi', 'jkl', 'mno', 'pqr']
-    # Map.rotate(matrix)
-
-
-
-
-
-

@@ -32,6 +32,7 @@ class Eye:
                 break
             time.sleep(TICK)
             remaining_time -= TICK
+        return self
 
 
 if __name__ == '__main__':

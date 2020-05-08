@@ -1,4 +1,5 @@
 import threading
+import traceback
 import time
 from input.window import Window
 from input.keyboard import Keyboard
@@ -6,6 +7,7 @@ from utils.collection import Collection
 from input.login import Login
 import config
 import logging
+from ai.dummy_fighter import DummyFighter
 
 TICK = 0.5
 
@@ -13,18 +15,19 @@ TICK = 0.5
 class Player(threading.Thread):
     def __init__(self, player_info, game_state) -> None:
         super().__init__(daemon=True)
+        self.player_info = player_info
         self.player_name = player_info['name']
         self.player_type = player_info['type']
-        self.player_creds = open(player_info['secret']).read().split('\n')
         self.game_state = game_state
         self.window = None
         self.keyboard = None
-        self.login = Login(player_info)
+        self.login = None
 
     def find_window(self):
         windows = Window.list_windows()
         w = Collection(windows).find_one(callback=lambda x: self.player_name in x.name)
         if not w:
+            self.login = Login(self.player_info)
             self.login.login()
             self.window = self.login.window
             self.keyboard = self.login.kb
@@ -46,9 +49,15 @@ class Player(threading.Thread):
             self.find_window()
             self.wait_until(lambda x: x.player_entity_id != 0 and x.map)
             logging.info('Player found !')
+            ai = DummyFighter(self)
+            ai.find_group_mob()
+            ai.fight_placement()
         except Exception as e:
             logging.error(e)
+            print(traceback.format_exc())
 
+    def __repr__(self):
+        return self.player_name
 
 
 if __name__ == '__main__':

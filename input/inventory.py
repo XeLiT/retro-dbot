@@ -1,10 +1,7 @@
 from input.window import Window
 
-POD_DETECT_0 = (449, 228)
-POD_DETECT_100 = (508, 228)
-ORANGE = 0x66ff
-EMPTY = 0xaacfd5
 
+# TODO
 class Inventory:
     def __init__(self, window: Window):
         self.window = window

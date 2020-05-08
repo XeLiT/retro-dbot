@@ -48,6 +48,7 @@ class GameFight:
         self.entity_turn = 0
         self.modifier = None
         self.new_entity_states: [Entity] = []
+        self.fight_started = False
 
     def set_fight_start_cells(self, raw_data):  # GP
         infos = raw_data[2:].split('|')
