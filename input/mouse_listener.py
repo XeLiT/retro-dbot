@@ -24,4 +24,5 @@ def listen_mouse_click(base_window: Window):
 
 if __name__ == '__main__':
     xelit = Window.list_windows()[0]
+    xelit.resize()
     listen_mouse_click(xelit.frame)

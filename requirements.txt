@@ -2,3 +2,5 @@ pyshark
 yaswfp
 pywin32
 pillow
+opencv-python
+numpy

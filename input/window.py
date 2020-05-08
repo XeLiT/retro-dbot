@@ -3,9 +3,9 @@ import win32gui
 import win32ui
 import win32.lib.win32con as win32con
 import time
-import ctypes
 from PIL import Image
-from ctypes import windll, wintypes
+import cv2
+import numpy as np
 
 TICK = 0.1
 DEFAULT_SIZE_X = 758
@@ -61,6 +61,7 @@ class Window:
 
     def focus(self):
         win32gui.SetForegroundWindow(self.hwnd)
+        time.sleep(TICK)
 
     def click(self, x=0, y=0, wParam=0):
         hwnd = self.hwnd
@@ -93,7 +94,8 @@ class Window:
         pass
 
 
-    def capture(self):  # TODO
+    def capture(self, debug=False):
+        self.focus()
         # dimensions = win32gui.GetWindowRect(self.hwnd)
         # image = ImageGrab.grab(dimensions)
         # image.show()
@@ -101,9 +103,9 @@ class Window:
         left, top, right, bot = win32gui.GetWindowRect(hwnd)
         w = right - left
         h = bot - top
-        # hdesktop = win32gui.GetDesktopWindow()
-        # hwndDC = win32gui.GetWindowDC(hdesktop)
-        hwndDC = win32gui.GetDC(hwnd)
+        hdesktop = win32gui.GetDesktopWindow()
+        hwndDC = win32gui.GetWindowDC(hdesktop)
+        # hwndDC = win32gui.GetDC(hwnd)
         mfcDC  = win32ui.CreateDCFromHandle(hwndDC)
         saveDC = mfcDC.CreateCompatibleDC()
         saveBitMap = win32ui.CreateBitmap()
@@ -116,13 +118,18 @@ class Window:
         bmpstr = saveBitMap.GetBitmapBits(True)
 
         im = Image.frombuffer('RGB', (bmpinfo['bmWidth'], bmpinfo['bmHeight']), bmpstr, 'raw', 'BGRX', 0, 1)
+        open_cv_image = cv2.cvtColor(np.array(im), cv2.COLOR_RGB2BGR)
+        del im
+        if debug:
+            cv2.imshow("Debug capture", open_cv_image)
+            cv2.waitKey()
 
         win32gui.DeleteObject(saveBitMap.GetHandle())
         saveDC.DeleteDC()
         mfcDC.DeleteDC()
-        # win32gui.ReleaseDC(hwndDC)
-        im.show()
+        win32gui.ReleaseDC(hdesktop, hwndDC)
 
+        return open_cv_image
 
 if __name__ == "__main__":
     xelit = Window.list_windows()[0]
