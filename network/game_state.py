@@ -28,9 +28,15 @@ class GameState:
             self.map.place_entities(self.entities)
             self.gui.table.set_data(self.map.matrix)
 
+    def get_player_entity(self):
+        entity = Collection(self.entities).find_one(id=self.player_entity_id) if self.player_entity_id else None
+        return entity if entity else Collection(self.entities).find_one(name=self.player_name)
+
+    def get_mob_entities(self):
+        return Collection(self.entities).find_all(type='Mob')
+
     def update_player_gui(self):
-        entity = Collection(self.entities).find_one(id=self.player_entity_id)
-        entity = entity if entity else Collection(self.entities).find_one(name=self.player_name)
+        entity = self.get_player_entity()
         if entity:
             self.gui.update_player_info(entity)
 

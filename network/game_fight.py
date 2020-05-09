@@ -62,6 +62,7 @@ class GameFight:
 
     def set_entity_turn(self, raw_data):  # GTS80146042|29000
         self.entity_turn = int(raw_data[3:].split('|')[0])
+        self.fight_started = True
         logging.info('Turn {}'.format(self.entity_turn))
 
     @staticmethod

@@ -1,10 +1,19 @@
 import logging
 import time
+import math
 import input.coordinates as coord
 from utils.collection import Collection
 
 TICK = 0.5
 
+def dist(a: [int, int], b: [int, int]) -> float:
+    return math.sqrt(pow(a[0] - b[0], 2) + pow(a[1] - b[1], 2))
+
+def distX(a, b) -> int:
+    return int(math.fabs(b[0] - a[0]))
+
+def distY(a, b) -> int:
+    return int(math.fabs(b[1] - a[1]))
 
 class DummyFighter:
     def __init__(self, player) -> None:
@@ -26,10 +35,22 @@ class DummyFighter:
 
     def fight_placement(self):
         self.w.click(*coord.COORD_READY)
-        self.player.wait_until(lambda x: x.game_fight.)
+        self.player.wait_until(lambda x: x.game_fight.fight_started, 5)
+
+    def get_player(self):
+        return self.gs.map.cells[self.gs.get_player_entity().cell]
+
+    def get_nearest(self):
+        player_cell = self.get_player()
+        mob_cells = list(map(lambda x: self.gs.map.cells[x.cell], self.gs.get_mob_entities()))
+        nearest = min(mob_cells, key=lambda x: dist(player_cell.cellXY, x.cellXY))
+        return nearest.entity
 
     def fight_turn(self):
         # TODO find nearest enemy
+        nearest = self.get_nearest()
+        path = self.gs.map.graph
+
         pass
 
     def end_fight(self):

@@ -7,14 +7,12 @@ from utils.entity import Entity
 from utils.cell import Cell
 from utils.collection import Collection
 from utils.contants import *
-
+from ai.graph import Graph
 
 class Map:
     def __init__(self, id, date, raw_key):
         self.path = '{}/{}_{}{}.swf'.format(MAP_DIR, id, date, 'X' if raw_key else '')
-        pos = MAPID_TO_POS[id]
-        self.x = pos[0]
-        self.y = pos[1]
+        self.x, self.y = MAPID_TO_POS[id]
         swf = swfparser.parsefile(self.path)
         raw_map_data = swf.tags[2].Actions[0].ConstantPool[14]
         self.width = int(swf.tags[2].Actions[17].Integer)
@@ -23,6 +21,7 @@ class Map:
         raw_cells = [data[i:i+10] for i in range(0, len(data), 10)]
         self.cells = [Cell(i) for i in raw_cells]
         self.matrix = self.matrixfy()
+        self.graph = Graph.from_matrix2d(self.matrix, lambda x: x.obj.dead)
 
     def matrixfy(self) -> [[Cell]]:
         rows = []
@@ -58,6 +57,16 @@ class Map:
         for cell in indexed_by_cell.keys():
             self.cells[int(cell)].set_entity(indexed_by_cell[cell])
 
+    def _cell_to_node(self, cell: Cell):
+        i, j = cell.posIJ
+        node_index = j + i * len(self.graph.nodes[0])
+        return self.graph.nodes[node_index]
+
+    def get_path(self, from_cell, to_cell):
+        self.graph.initial = self._cell_to_node(from_cell)
+        self.graph.target = self._cell_to_node(to_cell)
+        return list(map(lambda x: x.obj, self.graph.astar()))
+
     @staticmethod
     def _diag(matrix, size_i, size_j, i, j):
         padding = [Cell()] * j + [Cell()] * int(i / 2)
@@ -92,6 +101,6 @@ class Map:
             matrix_out.append([])
             for i in range(len(diags)):
                 cell = diags[i][j]
-                cell.posXY = [i, j]
+                cell.posIJ = [i, j]
                 matrix_out[j].append(cell)
         return matrix_out
