@@ -1,12 +1,10 @@
-import logging
 from urllib.parse import unquote
 import yaswfp.swfparser as swfparser
 from config import MAP_DIR
 from utils.refs.pos import MAPID_TO_POS
 from utils.entity import Entity
-from utils.cell import Cell
-from utils.collection import Collection
-from utils.contants import *
+from utils.cell import *
+from utils.helpers.collection import Collection
 from ai.graph import Graph
 
 class Map:

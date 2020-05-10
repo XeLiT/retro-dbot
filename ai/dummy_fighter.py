@@ -1,8 +1,7 @@
 import logging
-import time
 import math
 import input.coordinates as coord
-from utils.collection import Collection
+from utils.helpers.collection import Collection
 
 TICK = 0.5
 
@@ -22,8 +21,13 @@ class DummyFighter:
         self.w = self.player.window
         self.kb = self.player.keyboard
 
+    def loop(self):
+        logging.info('DummyFighter Loop')
+        self.find_group_mob()
+        self.fight_placement()
+        self.fight_turn()
+
     def find_group_mob(self):
-        self.player.wait_until(lambda x: not x.is_fighting)
         logging.info(f'Player {self.player} not fighting, finding for a GroupMob')
         while not self.gs.is_fighting:
             self.player.wait_until(lambda x: Collection(x.entities).find_one(type='GroupMob'))

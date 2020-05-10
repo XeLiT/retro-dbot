@@ -152,7 +152,7 @@ class Graph:
         return []
 
     @staticmethod
-    def from_matrix2d(matrix2d, is_dead):
+    def from_matrix2d(matrix2d, is_dead_cb):
         size_i = len(matrix2d)
         size_j = len(matrix2d[0])
         nodes = [list(map(lambda x: Node(x), matrix2d[i])) for i in range(size_i)]
@@ -160,10 +160,10 @@ class Graph:
         for i in range(size_i):
             for j in range(size_j):
                 n = nodes[i][j]
-                if not is_dead(n):
-                    if j + 1 < size_j and not is_dead(nodes[i][j+1]):
+                if not is_dead_cb(n):
+                    if j + 1 < size_j and not is_dead_cb(nodes[i][j+1]):
                         graph.add_edge(n, nodes[i][j+1])
-                    if i + 1 < size_i and not is_dead(nodes[i+1][j]):
+                    if i + 1 < size_i and not is_dead_cb(nodes[i+1][j]):
                         graph.add_edge(n, nodes[i+1][j])
         return graph
 

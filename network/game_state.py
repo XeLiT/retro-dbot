@@ -1,5 +1,5 @@
 import logging
-from utils.collection import Collection, Dictionary
+from utils.helpers.collection import Collection, Dictionary
 from utils.entity import Entity
 from utils.map import Map
 from network.map_infos import MapInfos

@@ -1,6 +1,5 @@
 import tkinter as tk
 from gui.table import Table
-from utils.contants import *
 
 
 class MasterGUI(tk.Tk):

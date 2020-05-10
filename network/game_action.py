@@ -1,6 +1,6 @@
 from utils.cell import unhash_cell
 import logging
-from utils.entity_modifier import EntityModifier, ENTITY_STAT_ID
+from utils.entity import EntityModifier, ENTITY_STAT_ID
 
 
 class GameAction:

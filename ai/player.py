@@ -3,7 +3,7 @@ import traceback
 import time
 from input.window import Window
 from input.keyboard import Keyboard
-from utils.collection import Collection
+from utils.helpers.collection import Collection
 from input.login import Login
 import config
 import logging
@@ -45,16 +45,18 @@ class Player(threading.Thread):
         return timeout > 0
 
     def run(self):
-        try:
-            self.find_window()
-            self.wait_until(lambda x: x.player_entity_id != 0 and x.map)
-            logging.info('Player found !')
-            ai = DummyFighter(self)
-            ai.find_group_mob()
-            ai.fight_placement()
-        except Exception as e:
-            logging.error(e)
-            print(traceback.format_exc())
+        self.find_window()
+        self.wait_until(lambda x: x.player_entity_id != 0 and x.map)
+        logging.info('Player found !')
+        ai = DummyFighter(self)
+        while True:
+            try:
+                ai.loop()
+                time.sleep(TICK)
+                break  # TODO loop indefinitly
+            except Exception as e:
+                logging.error(e)
+                print(traceback.format_exc())
 
     def __repr__(self):
         return self.player_name

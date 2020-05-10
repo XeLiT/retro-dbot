@@ -1,4 +1,6 @@
-from utils.contants import *
+HEX_CHARS = "0123456789ABCDEF"
+ZKARRAY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
+SUN_MAGICS = [1030, 1029, 4088]
 
 
 def unhash_cell(raw_cell):
@@ -36,9 +38,9 @@ class Cell:
             self.dead = False
         elif self.movement == 0 and self.lineOfSight:
             self.color = 'grey'
+            self.dead = False
         elif self.lineOfSight:
             self.color = 'white'
-            self.dead = False
 
     def set_entity(self, entity):
         if not entity:
@@ -49,6 +51,8 @@ class Cell:
             self.color = 'red'
             self.text = self.entity.type[0]
 
-    def __str__(self):
-        return self.text
+    def __repr__(self):
+        return str(self.__dict__)
 
+    def __str(self):
+        return self.__repr__()

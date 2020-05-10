@@ -13,5 +13,6 @@ NETWORK_INTERFACE = 'Ethernet'
 PLAYERS = [{
     'name': 'Xelit',
     'type': 'iop-air',
-    'secret': 'C:/Users/thomas/xelit.txt'
+    'secret': 'C:/Users/thomas/xelit.txt',
+    'spells': [{'name': 'épé céleste', 'index': 2, 'line': True, 'aoe': 2, 'range': [3, 3], 'priority': 100}]
 }]

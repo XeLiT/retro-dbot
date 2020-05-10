@@ -3,8 +3,10 @@ from input.keyboard import Keyboard
 from config import PLAYERS, BINARY, VERSION
 from ai.eye import Eye, IMAGE_LOGIN_MOTIF, IMAGE_LOGIN_MOTIF1, IMAGE_LOGIN_MOTIF2
 import time
-import win32com.client
 import input.coordinates as coord
+import win32api
+from utils.helpers.collection import Collection
+import logging
 
 
 class Login:
@@ -13,31 +15,32 @@ class Login:
         text = open(path).read().split('\n')
         return {'username': text[0], 'password': text[1]}
 
-    @staticmethod
-    def open_new_window():
+    def open_new_window(self):
         windows = Window.list_windows()
-        window_names = list(map(lambda x: x.name, windows))
-        for w in windows:
-            if w.name == f'Dofus Retro v{VERSION}':
-                return w
+        player_window = Collection(windows).find_one(callback=lambda x: self.player_info['name'] in x.name)
+        if player_window:
+            return player_window
+        login_window = Collection(windows).find_one(name=f'Dofus Retro v{VERSION}')
+        if login_window:
+            return login_window
 
-        initial_length = len(windows)
-        shell = win32com.client.Dispatch("WScript.Shell")
-        shell.Run(BINARY)
-        shell.AppActivate("Dofus Retro")
-        while len(windows) <= initial_length:
-            windows = Window.list_windows()
+        try:
+            win32api.WinExec(BINARY)
+        except Exception as e:
+            logging.warning(e)
+
+        while True:
+            logging.info(f'Opening new window for {self.player_info["name"]}')
             time.sleep(1)
+            window = Collection(Window.list_windows()).find_one(name=f'Dofus Retro v{VERSION}')
+            if window:
+                return window
 
-        for w in windows:
-            if w.name not in window_names:
-                return w
-        return None
 
     def __init__(self, player_info) -> None:
         self.player_info = player_info
         self.creds = Login.get_credentials(self.player_info['secret'])
-        self.window: Window = Login.open_new_window()
+        self.window: Window = self.open_new_window()
         self.eye: Eye = Eye(self.window)
         self.kb: Keyboard = Keyboard(self.window)
 
