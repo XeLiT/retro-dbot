@@ -5,7 +5,7 @@ from utils.refs.pos import MAPID_TO_POS
 from utils.entity import Entity
 from utils.cell import *
 from utils.helpers.collection import Collection
-from ai.graph import Graph
+from ai.algorithm.graph import Graph
 
 class Map:
     def __init__(self, id, date, raw_key):

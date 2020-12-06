@@ -9,14 +9,16 @@ from ai.player import Player
 
 if __name__ == '__main__':
     logging.basicConfig(level=config.LOGGING_LEVEL)
-    ask_admin_access()
+    # ask_admin_access()
     gui = MasterGUI()
-    gui.pack_slaves()
+    gui.onAfter()
     game_state = GameState(gui, config.PLAYERS[0]['name'])
     lock = threading.Lock()
     ns = NetworkSniffer(game_state, lock)
+    logging.info("Starting bot")
     ns.start()
     player = Player(config.PLAYERS[0], game_state)
+    gui.registerConfigChangeObserver(player)
     player.start()
     gui.mainloop()
     if ns in threading.enumerate():

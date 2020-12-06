@@ -14,7 +14,7 @@ def distX(a, b) -> int:
 def distY(a, b) -> int:
     return int(math.fabs(b[1] - a[1]))
 
-class DummyFighter:
+class SearchMob():
     def __init__(self, player) -> None:
         self.player = player
         self.gs = self.player.game_state
@@ -23,9 +23,11 @@ class DummyFighter:
 
     def loop(self):
         logging.info('DummyFighter Loop')
+
         self.find_group_mob()
         self.fight_placement()
         self.fight_turn()
+
 
     def find_group_mob(self):
         logging.info(f'Player {self.player} not fighting, finding for a GroupMob')
@@ -47,7 +49,7 @@ class DummyFighter:
     def get_nearest(self):
         player_cell = self.get_player()
         mob_cells = list(map(lambda x: self.gs.map.cells[x.cell], self.gs.get_mob_entities()))
-        nearest = min(mob_cells, key=lambda x: dist(player_cell.cellXY, x.cellXY))
+        nearest = min(mob_cells, key=lambda x: dist(player_cell.cellIJ, x.cellIJ))
         return nearest.entity
 
     def fight_turn(self):
@@ -55,6 +57,9 @@ class DummyFighter:
         nearest = self.get_nearest()
         path = self.gs.map.graph
 
+        pass
+
+    def in_range(self):
         pass
 
     def end_fight(self):

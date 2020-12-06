@@ -22,7 +22,7 @@ class NetworkSniffer(threading.Thread):
             try:
                 self.parse(packet)
             except Exception as e:
-                logging.error(e)
+                logging.exception(e)
 
     def parse(self, packet):
         if not packet.data.len:
@@ -32,31 +32,35 @@ class NetworkSniffer(threading.Thread):
 
         self.lock.acquire()
         for raw_data in data:
-            logging.debug('   Data: {}'.format(raw_data))
+            try:
+                logging.debug('   Data: {}'.format(raw_data))
 
-            # Map
-            if raw_data.startswith('GM'):
-                self.game_state.update_map_infos(MapInfos(raw_data))
-            elif raw_data.startswith('GDM'):
-                self.game_state.update_map(MapChange(raw_data))
-            elif raw_data.startswith('GA'):
-                self.game_state.update_from_action(GameAction().parse_action(raw_data))
+                # Map
+                if raw_data.startswith('GM'):
+                    self.game_state.update_map_infos(MapInfos(raw_data))
+                elif raw_data.startswith('GDM'):
+                    self.game_state.update_map(MapChange(raw_data))
+                elif raw_data.startswith('GA'):
+                    self.game_state.update_from_action(GameAction().parse_action(raw_data))
 
-            # Player
-            elif raw_data.startswith('Ow'):
-                self.game_state.player_infos.parse_pods(raw_data)
+                # Player
+                elif raw_data.startswith('Ow'):
+                    self.game_state.player_infos.parse_pods(raw_data)
 
-            # Fight
-            elif raw_data.startswith('GP'):
-                self.game_state.game_fight.set_fight_start_cells(raw_data)
-            elif raw_data.startswith('GIC'):
-                self.game_state.update_from_action(GameAction().parse_entity_start_cell(raw_data))
-            elif raw_data.startswith('GR'):
-                self.game_state.set_player_ready(**GameFight.parse_fight_ready(raw_data))
-            elif raw_data.startswith('GTS'):
-                self.game_state.game_fight.set_entity_turn(raw_data)
-            elif raw_data.startswith('GTM'):
-                self.game_state.update_entities(GameFight.parse_fight_state(raw_data))
-            elif raw_data.startswith('GCK'):  # and PLAYER_NAME in raw_data:                            # Fight end
-                self.game_state.set_fighting(False)
+                # Fight
+                elif raw_data.startswith('GP'):
+                    self.game_state.game_fight.set_fight_start_cells(raw_data)
+                elif raw_data.startswith('GIC'):
+                    self.game_state.update_from_action(GameAction().parse_entity_start_cell(raw_data))
+                elif raw_data.startswith('GR'):
+                    self.game_state.set_player_ready(**GameFight.parse_fight_ready(raw_data))
+                elif raw_data.startswith('GTS'):
+                    self.game_state.game_fight.set_entity_turn(raw_data)
+                elif raw_data.startswith('GTM'):
+                    self.game_state.update_entities(GameFight.parse_fight_state(raw_data))
+                elif raw_data.startswith('GCK'):  # and PLAYER_NAME in raw_data:                            # Fight end
+                    self.game_state.set_fighting(False)
+            except Exception as e:
+                logging.error(f"Error parsing: {raw_data}")
+                logging.exception(e)
         self.lock.release()

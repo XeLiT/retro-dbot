@@ -79,13 +79,14 @@ class GameState:
     def update_map(self, map_change):
         self.entities = []
         self.map = map_change.map
-        self.gui.init_table(self.map.height, self.map.height)
+        self.gui.table.clear()
 
     def set_fighting(self, fighting):
         self.is_fighting = fighting
         self.entities = []
         logging.info('Fighting {}'.format(fighting))
         self.gui.set_fighting_state(fighting)
+        self.gui.table.clear()
         if fighting:
             self.game_fight = GameFight()
 

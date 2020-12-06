@@ -39,6 +39,7 @@ class Window:
             children = w.get_children()
             if children:
                 w.frame = children[0]
+                w.children = children
         return windows
 
     def get_children(self):
@@ -96,7 +97,7 @@ class Window:
 
 
     def capture(self, debug=False):
-        self.focus()
+        self.focus()  # unfortunatly we need to focus
         # dimensions = win32gui.GetWindowRect(self.hwnd)
         # image = ImageGrab.grab(dimensions)
         # image.show()
@@ -135,6 +136,7 @@ class Window:
 if __name__ == "__main__":
     xelit = Window.list_windows()[0]
     xelit.focus()
-    xelit.frame.capture()
+    print(xelit)
+    print(xelit.children)
     # xelit.click_cell(30)
     # xelit.toggle_menu(2)

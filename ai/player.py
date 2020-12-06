@@ -7,7 +7,6 @@ from utils.helpers.collection import Collection
 from input.login import Login
 import config
 import logging
-from ai.dummy_fighter import DummyFighter
 
 TICK = 0.5
 
@@ -22,6 +21,13 @@ class Player(threading.Thread):
         self.window = None
         self.keyboard = None
         self.login = None
+
+        self.flag_search_mob = False
+
+    # Listen to GUI events
+    def notify(self, event):
+        if event["flag"] == "flag_search_mob":
+            self.flag_search_mob = not self.flag_search_mob
 
     def find_window(self):
         windows = Window.list_windows()
@@ -48,12 +54,11 @@ class Player(threading.Thread):
         self.find_window()
         self.wait_until(lambda x: x.player_entity_id != 0 and x.map)
         logging.info('Player found !')
-        ai = DummyFighter(self)
+        # ai = DummyFighter(self)
         while True:
             try:
-                ai.loop()
+                # ai.loop()
                 time.sleep(TICK)
-                break  # TODO loop indefinitly
             except Exception as e:
                 logging.error(e)
                 print(traceback.format_exc())

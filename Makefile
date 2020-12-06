@@ -4,5 +4,8 @@ help:
 install:
 	pip3 install -r requirements.txt
 
+test:
+	py main_test.py
+
 run:
 	py main.py

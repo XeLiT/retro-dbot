@@ -11,7 +11,7 @@ class Table(tk.Frame):
         for row in range(rows):
             current_row = []
             for column in range(columns):
-                label = tk.Label(self, text=" ", borderwidth=0, width=2)
+                label = tk.Label(self, text=" ", background="black", borderwidth=0, width=2)
                 label.grid(row=row, column=column, sticky="nsew", padx=0, pady=0)
                 current_row.append(label)
             self._widgets.append(current_row)
@@ -30,7 +30,12 @@ class Table(tk.Frame):
                 cell = cells[i][j]
                 widget = self._widgets[i][j]
                 widget.configure(background=cell.color, text=cell.text)
-                widget.bind('<Button-1>', lambda e, a=i, b=j: self.debug_cell(a, b))
+                # widget.bind('<Button-1>', lambda e, a=i, b=j: self.debug_cell(a, b))
+
+    def clear(self):
+        for i in range(len(self._widgets)):
+            for j in range(len(self._widgets[0])):
+                self._widgets[i][j].configure(background="black", text="")
 
     def debug_cell(self, i, j):
         cell = self.cells[i][j]

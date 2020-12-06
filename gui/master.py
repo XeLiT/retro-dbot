@@ -7,21 +7,23 @@ class MasterGUI(tk.Tk):
         super().__init__()
         self.geometry("800x700")
         self.resizable(0, 0)
-        tk.Label(self, text="Actions").grid(column=0)
-        tk.Label(self, text="GameMapStatus").grid(column=1, row=0)
+        self.observers = []
+
+        tk.Label(self, text="Actions", width=20).grid(column=0, row=0, columnspan=3, sticky="n")
+        # tk.Label(self, text="GameMapStatus").grid(column=1, row=0)
         self.player_infos = []
         for i in range(10):
-            label = tk.Label(self, text="-", borderwidth=0, width=10)
-            label.grid(row=(1 + i), column=0, sticky="n", padx=0, rowspan=3)
+            label = tk.Label(self, text="-", borderwidth=0, width=20)
+            label.grid(row=(1 + i), column=0, padx=0, rowspan=1, columnspan=3, sticky="n")
             self.player_infos.append(label)
 
-        self.fighting_state = tk.Label(self, text="Not fighting", borderwidth=0, width=10)
-        self.fighting_state.grid(row=(1 + 10 + 1), column=0, sticky="n", padx=0, rowspan=2)
-        # self.stop_button = tk.Button(self, text="Stop", relief=tk.FLAT)
-        # self.stop_button.grid(row=1)
+        self.fighting_state = tk.Label(self, text="Not fighting", background='green', borderwidth=0, width=10)
+        self.fighting_state.grid(row=(1 + 10 + 1), column=0, sticky="n", padx=0, rowspan=2, columnspan=3)
+        self.update_bot_config_search_mob()
+
         self.table = None
         self.player = None
-        self.init_table(19, 42)
+        self.init_table(40, 40)
 
     def set_fighting_state(self, state):
         if state:
@@ -37,9 +39,26 @@ class MasterGUI(tk.Tk):
                 self.player_infos[i].configure(text=text)
             i += 1
 
+    def registerConfigChangeObserver(self, Listener):
+        self.observers.append(Listener)  # observers must implement notify method
+
+    def update_bot_config_search_mob(self):
+        button = tk.Button(self, text="Searching Mob: False", borderwidth=0, width=20)
+        button.grid(row=15, column=0, sticky="nw", padx=0)
+        button.bind("<Button-1>", lambda e: self.notify({"event": "click", "flag": "flag_search_mob", "ref": button}))
+
+    def notify(self, event):
+        for l in self.observers:
+            l.notify(event)
+
     def init_table(self, width, height):
         if self.table:
             self.table.pack_forget()
             self.table.destroy()
         self.table = Table(self, rows=height, columns=width)
         self.table.grid(row=1, column=3, rowspan=height)
+
+    def onAfter(self):
+        # self.grid(sticky=tk.N+tk.S)
+        # self.pack_slaves()
+        pass
