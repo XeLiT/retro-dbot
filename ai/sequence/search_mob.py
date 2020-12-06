@@ -5,15 +5,7 @@ from utils.helpers.collection import Collection
 
 TICK = 0.5
 
-def dist(a: [int, int], b: [int, int]) -> float:
-    return math.sqrt(pow(a[0] - b[0], 2) + pow(a[1] - b[1], 2))
-
-def distX(a, b) -> int:
-    return int(math.fabs(b[0] - a[0]))
-
-def distY(a, b) -> int:
-    return int(math.fabs(b[1] - a[1]))
-
+# SearchMob: Sequence to choose a mob and start a fight, use Observable design pattern
 class SearchMob():
     def __init__(self, player) -> None:
         self.player = player
@@ -22,15 +14,14 @@ class SearchMob():
         self.kb = self.player.keyboard
 
     def loop(self):
-        logging.info('DummyFighter Loop')
-
+        logging.info('SearchMob Sequence')
         self.find_group_mob()
         self.fight_placement()
         self.fight_turn()
 
 
     def find_group_mob(self):
-        logging.info(f'Player {self.player} not fighting, finding for a GroupMob')
+        logging.info(f'SearchMob find_group_mob')
         while not self.gs.is_fighting:
             self.player.wait_until(lambda x: Collection(x.entities).find_one(type='GroupMob'))
             entity = Collection(self.gs.entities).find_one(type='GroupMob')

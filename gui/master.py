@@ -1,10 +1,11 @@
 import tkinter as tk
 from gui.table import Table
+from utils.patterns.observable import Observable
 
-
-class MasterGUI(tk.Tk):
+class MasterGUI(tk.Tk, Observable):
     def __init__(self):
-        super().__init__()
+        tk.Tk.__init__(self)
+        Observable.__init__(self)
         self.geometry("800x700")
         self.resizable(0, 0)
         self.observers = []
@@ -39,17 +40,10 @@ class MasterGUI(tk.Tk):
                 self.player_infos[i].configure(text=text)
             i += 1
 
-    def registerConfigChangeObserver(self, Listener):
-        self.observers.append(Listener)  # observers must implement notify method
-
     def update_bot_config_search_mob(self):
         button = tk.Button(self, text="Searching Mob: False", borderwidth=0, width=20)
         button.grid(row=15, column=0, sticky="nw", padx=0)
-        button.bind("<Button-1>", lambda e: self.notify({"event": "click", "flag": "flag_search_mob", "ref": button}))
-
-    def notify(self, event):
-        for l in self.observers:
-            l.notify(event)
+        button.bind("<Button-1>", lambda e: self.dispatch(e, "flag_search_mob"))
 
     def init_table(self, width, height):
         if self.table:
