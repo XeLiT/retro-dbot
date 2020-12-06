@@ -4,6 +4,9 @@ import time
 from input.window import Window
 from input.keyboard import Keyboard
 from utils.helpers.collection import Collection
+from utils.patterns.observable import Observable
+from utils.patterns.observer import Observer
+
 from input.login import Login
 import config
 import logging
@@ -11,7 +14,7 @@ import logging
 TICK = 0.5
 
 
-class Player(threading.Thread):
+class Player(threading.Thread, Observable, Observer):
     def __init__(self, player_info, game_state) -> None:
         super().__init__(daemon=True)
         self.player_info = player_info
@@ -25,8 +28,8 @@ class Player(threading.Thread):
         self.flag_search_mob = False
 
     # Listen to GUI events
-    def notify(self, event):
-        if event["flag"] == "flag_search_mob":
+    def update(self, event, event_type):
+        if event_type == "flag_search_mob":
             self.flag_search_mob = not self.flag_search_mob
             event["ref"].configure(text=f"Flag Searching Mob {str(self.flag_search_mob)}", background="green" if self.flag_search_mob else "white")
 
@@ -63,8 +66,7 @@ class Player(threading.Thread):
                 # ai.loop()
                 time.sleep(TICK)
             except Exception as e:
-                logging.error(e)
-                print(traceback.format_exc())
+                logging.exception(e)
 
     def __repr__(self):
         return self.player_name
