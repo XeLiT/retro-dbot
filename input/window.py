@@ -7,7 +7,7 @@ from PIL import Image
 import cv2
 import numpy as np
 
-TICK = 0.1
+TICK = 0.07
 DEFAULT_SIZE_X = 758
 DEFAULT_SIZE_Y = 615
 CELL_Y_OFFSET = 10
@@ -66,10 +66,8 @@ class Window:
 
     def click(self, x=0, y=0, wParam=0):
         hwnd = self.hwnd
-        time.sleep(TICK)
         lp = win32api.MAKELONG(x, y)
         win32api.PostMessage(hwnd, win32con.WM_LBUTTONDOWN, wParam, lp)
-        time.sleep(TICK)
         win32api.PostMessage(hwnd, win32con.WM_LBUTTONUP, wParam, lp)
 
     def double_click(self, x=0, y=0, wParam=0):

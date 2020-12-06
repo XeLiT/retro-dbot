@@ -1,3 +1,8 @@
-BOT config input gui
-search mob sequence
-hit and run sequence
+search_mob:
+  move map
+
+
+hit and run sequence:
+  fight_placement
+  pass turn
+  move

@@ -3,7 +3,7 @@ import logging
 from utils.entity import EntityModifier, ENTITY_STAT_ID
 
 
-# DATA = "GA;100;250061785;-1,-4,2"
+# DATA = ""
 # DATA = "GA;1;-3;aa9db1"
 # DATA = "GA;950;250061785;250061785,3,0"
 class GameAction:
@@ -18,27 +18,35 @@ class GameAction:
 
     def parse_action(self, raw_data):
         data = list(filter(lambda x: x != '', raw_data[2:].split(';')))
-        self.data = data
         if len(data) > 1:
             self.action_type = int(data[0])
 
-            if self.action_type == 1:
+            if self.action_type == 0:
+                self.debug_action_name = 'Self Moving to'
+                self.entity_id = int(data[2])
+                self._set_cell(data[3])
+                self.is_moving = True
+
+            elif self.action_type == 1:
                 self.debug_action_name = 'Moving to'
                 self.entity_id = int(data[1])
                 self._set_cell(data[2])
                 self.is_moving = True
 
             elif self.action_type == 103:
+                self.debug_action_name = 'Modifier dead'
                 self.modifier = EntityModifier(entity=int(data[2]), dead=True)
 
-            elif self.action_type in [100, 108, 110, 127, 129, 128, 78, 169, 101, 102, 111, 120, 168]:   # GA;100;-1;80146042,-14
+            elif self.action_type in [100, 108, 110, 127, 129, 128, 78, 169, 101, 102, 111, 120, 168]:   #
                 if str(self.action_type) in ENTITY_STAT_ID.keys():
-                    entity, value = map(int, data[2].split(','))
-                    self.modifier = EntityModifier(entity=entity)
-                    self.modifier.__setattr__(ENTITY_STAT_ID[str(self.action_type)], value)
+                    self.debug_action_name = 'Modifier'
+                    tokens = list(map(int, data[-1].split(',')))
+                    self.modifier = EntityModifier(entity=tokens[0])
+                    self.modifier.__setattr__(ENTITY_STAT_ID[str(self.action_type)], tokens[1])
                     logging.info('Modifier {}'.format(self.modifier.__dict__))
 
             elif self.action_type == 905:
+                self.debug_action_name = 'Enter fight'
                 self.entity_id = int(data[1])
                 self.is_enter_fight = True
             logging.debug(self.__dict__)

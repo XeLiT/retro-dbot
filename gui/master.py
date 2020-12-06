@@ -1,12 +1,13 @@
 import tkinter as tk
 from gui.table import Table
 from utils.patterns.observable import Observable
+from input.window import DEFAULT_SIZE_X
 
 class MasterGUI(tk.Tk, Observable):
     def __init__(self):
         tk.Tk.__init__(self)
         Observable.__init__(self)
-        self.geometry("800x700")
+        self.geometry(f"800x700+{DEFAULT_SIZE_X + 20}+0")
         self.resizable(0, 0)
         self.observers = []
 

@@ -36,3 +36,6 @@ class EntityModifier:
                         entity.__setattr__(attr, entity.__getattribute__(attr) + self.__getattribute__(attr))
                     else:
                         entity.__setattr__(attr, self.__getattribute__(attr))
+
+    def __str__(self):
+        return str(self.__dict__)
