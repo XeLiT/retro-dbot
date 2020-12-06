@@ -10,9 +10,16 @@ MOTIF_DIR = 'utils/refs/'
 # Sniffer
 NETWORK_INTERFACE = 'Ethernet'
 
-PLAYERS = [{
-    'name': 'Xelit',
-    'type': 'feca',
-    'secret': 'C:/Users/thomas/xelit.txt',
-    'spells': [{'name': 'Attaque Naturelle', 'index': 1, 'range': [1, 6], 'priority': 100}]
-}]
+PLAYERS = [
+    {
+        'name': 'Panini',
+        'type': 'cra',
+        'spells': [{'name': 'Fleche Magique', 'index': 1, 'pa': 5, 'range': [1, 7], 'priority': 100}]
+    },
+    {
+        'name': 'Xelit',
+        'type': 'feca',
+        'secret': 'C:/Users/thomas/xelit.txt',
+        'spells': [{'name': 'Attaque Naturelle', 'index': 1, 'range': [1, 6], 'priority': 100}]
+    }
+]

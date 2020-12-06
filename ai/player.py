@@ -28,19 +28,22 @@ class Player(threading.Thread):
     def notify(self, event):
         if event["flag"] == "flag_search_mob":
             self.flag_search_mob = not self.flag_search_mob
+            event["ref"].configure(text=f"Flag Searching Mob {str(self.flag_search_mob)}", background="green" if self.flag_search_mob else "white")
 
     def find_window(self):
         windows = Window.list_windows()
         w = Collection(windows).find_one(callback=lambda x: self.player_name in x.name)
-        if not w:
-            self.login = Login(self.player_info)
-            self.login.login()
-            self.window = self.login.window
-            self.keyboard = self.login.kb
-        else:
+        # if not w:
+            # self.login = Login(self.player_info)
+            # self.login.login()
+            # self.window = self.login.window
+            # self.keyboard = self.login.kb
+        if w:
             self.window = w
             self.keyboard = Keyboard(w)
-        logging.info(f'Found window for {self.player_name} !')
+            logging.info(f'Found window for {self.player_name} !')
+            return True
+        return False
 
     def wait_until(self, callback, timeout=60):
         while timeout > 0:
@@ -48,15 +51,15 @@ class Player(threading.Thread):
                 break
             time.sleep(TICK)
             timeout -= TICK
-        return timeout > 0
+        raise Exception("Timeout exception")
 
     def run(self):
-        self.find_window()
-        self.wait_until(lambda x: x.player_entity_id != 0 and x.map)
-        logging.info('Player found !')
-        # ai = DummyFighter(self)
         while True:
             try:
+                self.wait_until(self.find_window)
+                self.wait_until(lambda x: x.player_entity_id != 0 and x.map)
+                logging.info('Player found !')
+                # ai = DummyFighter(self)
                 # ai.loop()
                 time.sleep(TICK)
             except Exception as e:
