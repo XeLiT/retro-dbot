@@ -7,4 +7,4 @@ class Rectangle:
         self.center = top_left[0] + w // 2, top_left[1] + h // 2
 
     def __repr__(self):
-        return self.__dict__
+        return str(self.__dict__)

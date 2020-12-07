@@ -7,7 +7,7 @@ from PIL import Image
 import cv2
 import numpy as np
 
-TICK = 0.07
+TICK = 0.15
 DEFAULT_SIZE_X = 758
 DEFAULT_SIZE_Y = 615
 CELL_Y_OFFSET = 10
@@ -17,6 +17,7 @@ PLAYER_MENU_OFFSETS = (490, 454)
 PLAYER_MENU_GAP_X = 29.25
 PLAYER_MENU_ORDER = {'player': 0, 'spells': 1, 'inventory': 2}
 
+POS_RESCUE = (367, 464)
 
 class Window:
     def __init__(self, hwnd, name):
@@ -24,6 +25,9 @@ class Window:
         self.name = name
         self.frame: Window = None  # main frame of the game
         self.children = []
+
+    def __repr__(self):
+        return str(self.__dict__)
 
     @staticmethod
     def _window_enumeration_handler(hwnd, top_windows):
@@ -77,21 +81,32 @@ class Window:
         win32api.PostMessage(self.hwnd, win32con.WM_LBUTTONUP, wParam, lp)
 
     def click_cell(self, cell, with_shift=False):
-        y, x = divmod(cell, 14.5)
-        _x = int(x * CELL_GAP_X)
-        _y = int(y * (CELL_GAP_Y / 2))
-        wParam = 0 if not with_shift else win32con.MK_SHIFT
+        _x, _y = self.cell_to_xy(cell)
+        wParam = 0 if not with_shift else win32con.MK_SHIFT #  SHIFT does't apply shift correctly...
         self.click(_x, _y + CELL_Y_OFFSET, wParam)
+
+    def click_fight(self, cell):
+        _x, _y = self.cell_to_xy(cell)
+        self.click(_x, _y + CELL_Y_OFFSET)
+        time.sleep(1)
+        self.click(_x + 5, _y + CELL_Y_OFFSET + 5)
+
+    def click_rescue(self):
+        self.resize()
+        self.focus()
+        time.sleep(TICK)
+        self.click(*POS_RESCUE)
+        time.sleep(TICK)
+
+    def cell_to_xy(self, cell):
+        y, x = divmod(cell, 14.5)
+        return int(x * CELL_GAP_X), int(y * (CELL_GAP_Y / 2))
 
     def toggle_menu(self, index):
         x, y = PLAYER_MENU_OFFSETS
         x += int(index * PLAYER_MENU_GAP_X)
         self.click(x, y)
         time.sleep(TICK * 5)
-
-    def get_pixels(self, rect=None):
-        # win32gui.GetPixel(self.hwnd, )
-        pass
 
 
     def capture(self, debug=False):
@@ -132,9 +147,10 @@ class Window:
         return open_cv_image
 
 if __name__ == "__main__":
-    xelit = Window.list_windows()[0]
-    xelit.focus()
-    print(xelit)
-    print(xelit.children)
+    windows = Window.list_windows()
+    # xelit.focus()
+    # print(xelit)
+    for w in windows:
+        print(w)
     # xelit.click_cell(30)
     # xelit.toggle_menu(2)

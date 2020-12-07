@@ -30,7 +30,7 @@ class NetworkSniffer(threading.Thread):
         binary = binascii.unhexlify(packet.data.data)
         data = filter(None, struct.unpack('!{}s'.format(len(binary)), binary)[0].decode('utf-8').replace('\n', '').split('\x00'))
 
-        self.lock.acquire()
+        # self.lock.acquire()
         for raw_data in data:
             try:
                 logging.debug('   Data: {}'.format(raw_data))
@@ -63,4 +63,4 @@ class NetworkSniffer(threading.Thread):
             except Exception as e:
                 logging.error(f"Error parsing: {raw_data}")
                 logging.exception(e)
-        self.lock.release()
+        # self.lock.release()

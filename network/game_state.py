@@ -12,7 +12,8 @@ class GameState:
     def __init__(self, gui, player_name):
         self.player_name = player_name
         self.player_entity_id = 0
-        self.player_infos = PlayerInfos()
+        #self.player_infos = PlayerInfos()
+        self.player_level = 0
         self.map: Map = None
         self.is_fighting = False
         self.entities: [Entity] = []
@@ -43,6 +44,7 @@ class GameState:
     def _find_player(self):
         if not self.player_entity_id:
             entity = Collection(self.entities).find_one(name=self.player_name)
+            print(entity)
             if entity:
                 self.player_entity_id = entity.id
                 logging.info("Found Player id: {}".format(self.player_entity_id))

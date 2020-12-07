@@ -6,6 +6,7 @@ from utils.entity import Entity
 from utils.cell import *
 from utils.helpers.collection import Collection
 from ai.algorithm.graph import Graph
+import logging
 
 class Map:
     def __init__(self, id, date, raw_key):
@@ -53,7 +54,10 @@ class Map:
     def place_entities(self, entities: [Entity]):
         indexed_by_cell = Collection(entities).index_by('cell')
         for cell in indexed_by_cell.keys():
-            self.cells[int(cell)].set_entity(indexed_by_cell[cell])
+            if cell in indexed_by_cell and int(cell) < len(self.cells):
+                self.cells[int(cell)].set_entity(indexed_by_cell[cell])
+            else:
+                logging.error("indexed_by_cell out of range key: {cell} obj: {indexed_by_cell}")
 
     def _cell_to_node(self, cell: Cell):
         i, j = cell.posIJ

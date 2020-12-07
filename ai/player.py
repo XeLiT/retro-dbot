@@ -6,6 +6,7 @@ from utils.patterns.observable import Observable
 from utils.patterns.observer import Observer
 from ai.sequence.search_mob import SearchMob
 from ai.sequence.sequence import Sequence
+from ai.eye import Eye
 
 import config
 import logging
@@ -23,6 +24,7 @@ class Player(threading.Thread, Observable, Observer, Sequence):
         self.window = None
         self.keyboard = None
         self.login = None
+        self.eye = None
         self.flag_search_mob = False
         Sequence.__init__(self, self)
 
@@ -41,6 +43,7 @@ class Player(threading.Thread, Observable, Observer, Sequence):
             self.window.resize()
             self.window.focus()
             self.keyboard = Keyboard(w)
+            self.eye = Eye(self.window)
             logging.info(f'Found window for {self.player_name} !')
             return True
         return False

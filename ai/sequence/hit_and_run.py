@@ -1,6 +1,6 @@
+from ai.sequence.sequence import Sequence
+
 class HitAndRun(Sequence):
-
-
     def get_player(self):
         return self.gs.map.cells[self.gs.get_player_entity().cell]
 
