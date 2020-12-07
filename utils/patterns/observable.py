@@ -20,7 +20,7 @@ class Observable:
     def dispatch(self, event, event_type=""):
         if event_type != "" and event_type in self.event_type_index:
             for observer in self.event_type_index[event_type]:
-                observer.update(event)
+                observer.update(event, event_type)
         else:
             for observer in self.observers:
                 observer.update(event)

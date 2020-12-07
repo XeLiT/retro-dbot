@@ -29,7 +29,7 @@ class SearchMob(Sequence):
             if tries > ENGAGE_TRIES_PER_MAP:
                 self.next_map()
 
-        logging.info('SearchMob Sequence sleeping 5 seconds')
+        logging.info('SearchMob Sequence sleeping 5 seconds') ## TODO remove to return
         time.sleep(5)
 
     def engage_group_mob(self, group_mob):

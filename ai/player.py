@@ -5,6 +5,7 @@ from utils.helpers.collection import Collection
 from utils.patterns.observable import Observable
 from utils.patterns.observer import Observer
 from ai.sequence.search_mob import SearchMob
+from ai.sequence.hit_and_run import HitAndRun
 from ai.sequence.sequence import Sequence
 from ai.eye import Eye
 
@@ -56,8 +57,11 @@ class Player(threading.Thread, Observable, Observer, Sequence):
                 if not self.wait_until(lambda x: x.player_entity_id != 0 and x.map, self.game_state):
                     continue
                 logging.info('Player found !')
-                ai = SearchMob(self)
-                ai.loop()
+                # world_ai = SearchMob(self) # FIXME remove comments
+                # world_ai.loop()
+
+                fight_ai = HitAndRun(self)
+                fight_ai.loop()
                 self.tick()
             except Exception as e:
                 logging.exception(e)

@@ -1,6 +1,12 @@
 from ai.sequence.sequence import Sequence
+import time
+
 
 class HitAndRun(Sequence):
+
+    def loop(self):
+        time.sleep(1000)
+
     def get_player(self):
         return self.gs.map.cells[self.gs.get_player_entity().cell]
 
@@ -14,7 +20,6 @@ class HitAndRun(Sequence):
         # TODO find nearest enemy
         nearest = self.get_nearest()
         path = self.gs.map.graph
-
         pass
 
     def in_range(self):

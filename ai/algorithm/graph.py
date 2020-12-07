@@ -94,33 +94,6 @@ class Graph:
         self.edges[id(from_node)].append(Edge(to_node, weight))
         self.edges[id(to_node)].append(Edge(from_node, weight))
 
-    def dijsktra(self) -> [Node]:
-        self.initial.traveled = 0
-        queue = [self.initial]
-        found = False
-        visited = []
-        d1, d2 = 0, 0
-        while len(queue) and not found:
-            from_node = queue[0]
-            edges = sorted(self.edges[id(from_node)], key=lambda k: k.weight)
-            for e in edges:
-                to_node = e.node
-                d1 += 1
-                if to_node not in visited:
-                    d2 += 1
-                    to_node.traveled = e.weight + from_node.traveled
-                    to_node.previous = from_node
-                    if to_node == self.target:
-                        found = True
-                        break
-                    queue.append(to_node)
-            visited.append(from_node)
-            queue.remove(from_node)
-            queue.sort(key=lambda x: x.traveled)
-
-        print(d1, d2)
-        return [] if not found else self._build_path()
-
     def _build_path(self):
         path = []
         n = self.target

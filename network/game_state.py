@@ -7,12 +7,11 @@ from network.game_action import GameAction
 from network.game_fight import GameFight
 from network.player_infos import PlayerInfos
 
-
 class GameState:
     def __init__(self, gui, player_name):
         self.player_name = player_name
         self.player_entity_id = 0
-        #self.player_infos = PlayerInfos()
+        self.player_infos = PlayerInfos()  # TODO get player info from network
         self.player_level = 0
         self.map: Map = None
         self.is_fighting = False
@@ -20,7 +19,6 @@ class GameState:
         self.map_id = 0
         self.gui = gui
         self.game_fight: GameFight = GameFight()
-        self._map_needs_update = False
 
     def update_gui(self):
         self._find_player()
@@ -44,7 +42,6 @@ class GameState:
     def _find_player(self):
         if not self.player_entity_id:
             entity = Collection(self.entities).find_one(name=self.player_name)
-            print(entity)
             if entity:
                 self.player_entity_id = entity.id
                 logging.info("Found Player id: {}".format(self.player_entity_id))
@@ -78,7 +75,7 @@ class GameState:
             game_action.modifier.apply(Collection(self.entities).find_one(id=game_action.modifier.entity))
         self.update_player_gui()
 
-    def update_map(self, map_change):
+    def new_map(self, map_change):
         self.entities = []
         self.map = map_change.map
         self.gui.table.clear()

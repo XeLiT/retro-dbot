@@ -6,6 +6,7 @@ from utils.entity import Entity
 from utils.cell import *
 from utils.helpers.collection import Collection
 from ai.algorithm.graph import Graph
+from ai.algorithm.line_of_sight import Sight_Bresenham
 import logging
 
 class Map:
@@ -21,6 +22,7 @@ class Map:
         self.cells = [Cell(i) for i in raw_cells]
         self.matrix = self.matrixfy()
         self.graph = Graph.from_matrix2d(self.matrix, lambda x: x.obj.dead)
+        self.sight = Sight_Bresenham.from_matrix2d(self.matrix, lambda pos: self.matrix[pos[0]][pos[1]].is_obstacle())
 
     def matrixfy(self) -> [[Cell]]:
         rows = []

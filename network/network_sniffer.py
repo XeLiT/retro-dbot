@@ -39,7 +39,7 @@ class NetworkSniffer(threading.Thread):
                 if raw_data.startswith('GM'):
                     self.game_state.update_map_infos(MapInfos(raw_data))
                 elif raw_data.startswith('GDM'):
-                    self.game_state.update_map(MapChange(raw_data))
+                    self.game_state.new_map(MapChange(raw_data))
                 elif raw_data.startswith('GA'):
                     self.game_state.update_from_action(GameAction().parse_action(raw_data))
 

@@ -14,6 +14,7 @@ class Cell:
         self.dead = True
         self.text = ' '
         self.posIJ = []
+        self.lineOfSight = False
         if raw_data:
             self.parse_data(raw_data)
             self.set_default_display()
@@ -30,6 +31,9 @@ class Cell:
         self.layerObject2Num = ((cd[0]&2)<<12) + ((cd[7]&1)<<12) + (cd[8]<<6) + cd[9]
         self.isSun = self.layerObject1Num in SUN_MAGICS or self.layerObject2Num in SUN_MAGICS
         self.text = str(self.movement)
+
+    def is_obstacle(self):
+        return self.lineOfSight and not self.entity
 
     def set_default_display(self):
         self.text = str(self.movement)
