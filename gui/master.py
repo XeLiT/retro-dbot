@@ -25,7 +25,7 @@ class MasterGUI(tk.Tk, Observable):
 
         self.table = None
         self.player = None
-        self.init_table(40, 40)
+        self.init_table(32, 32)
 
     def set_fighting_state(self, state):
         if state:

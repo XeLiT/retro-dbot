@@ -14,7 +14,7 @@ PLAYERS = [
     {
         'name': 'Panini',
         'type': 'cra',
-        'attack_spell': {'name': 'Fleche Magique', 'index': 1, 'pa': 4, 'range': [1, 7], 'priority': 100}
+        'attack_spell': {'name': 'Fleche Magique', 'index': 1, 'pa': 4, 'range': [1, 10], 'priority': 100}
     }
 ]
 

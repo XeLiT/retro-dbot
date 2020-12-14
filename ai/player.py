@@ -82,9 +82,9 @@ class Player(threading.Thread, Observable, Observer, Sequence):
                     continue
                 world_ai = SearchMob(self)
                 world_ai.loop()
-                # fight_ai = HitAndRun(self)
-                # fight_ai.loop()
-                self.tick(10)
+                fight_ai = HitAndRun(self)
+                fight_ai.loop()
+                self.tick(1)
             except Exception as e:
                 logging.exception(e)
                 self.tick(self.TICK * 10)

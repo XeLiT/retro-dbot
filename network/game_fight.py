@@ -42,14 +42,18 @@ DEBUG:root:   Data: ILS2000
 """
 
 
-# Helper class for fight actions
 class GameFight:
+    STATE_START = "START"           # Must select start position
+    STATE_WAIT_TURN = "WAIT_TURN"   # Wait for playere turn
+    STATE_ENDED = "END"
+
     def __init__(self, game_state):
         self.gs = game_state
         self.start_cells = []
         self.entity_turn = 0
         self.modifier = None
         self.new_entity_states: [Entity] = []
+        self.state = GameFight.STATE_START
         self.fight_started = False
 
     def set_fight_start_cells(self, raw_data):  # GP

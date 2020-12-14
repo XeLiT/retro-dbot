@@ -4,7 +4,7 @@ import logging
 
 
 class Table(tk.Frame):
-    def __init__(self, parent, rows=42, columns=42):
+    def __init__(self, parent, rows=32, columns=32):
         tk.Frame.__init__(self, parent)
         self._widgets = []
         self.cells = []

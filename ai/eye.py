@@ -3,7 +3,7 @@ import time
 import config
 from input.window import Window
 from utils.helpers.rect import Rectangle
-from input.window import FRAME_OFFSET_X, FRAME_OFFSET_Y
+from input.window import CELL_Y_OFFSET
 
 IMAGE_DIR = '../utils/motifs/' if __name__ == '__main__' else config.MOTIF_DIR
 TICK = 0.1
@@ -28,7 +28,7 @@ class Eye:
         if get_position:
             min_val, max_val, min_loc, top_left = cv2.minMaxLoc(result)
             h, w, _ = motif.shape
-            adjusted_top_left = (top_left[0] + FRAME_OFFSET_X, top_left[1] + FRAME_OFFSET_Y)
+            adjusted_top_left = (top_left[0], top_left[1] + CELL_Y_OFFSET)
             return cv2.minMaxLoc(result)[1] > acceptance, Rectangle(adjusted_top_left, w, h)
         return cv2.minMaxLoc(result)[1] > acceptance, None
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
             (x, y) = match[1].center
             w.click(x, y + i)
             print((x, y))
-            time.sleep(0.2)
+            time.sleep(0.5)
 
     Eye.debug(capture, match[1].top_left, match[1].bottom_right)
 

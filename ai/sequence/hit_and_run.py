@@ -11,30 +11,39 @@ PREFERRED_MAX_DISTANCE_FROM_MOBS = 10
 class HitAndRun(Sequence):
     def loop(self):
         logging.info('HitAndRun Sequence')
-        while self.gs.is_fighting and self.gs.game_fight is not None and self.gs.game_fight:
+        while self.gs.is_fighting and self.gs.game_fight is not None and not self.gs.game_fight.fight_started:
             desired_start_cell = self.find_starting_cell()
             logging.info(f'HitAndRun Start cell {desired_start_cell}')
             self.player.window.click_cell(desired_start_cell)
             self.tick()
-            self.wait_until(lambda gs: gs.get_playecr_entity() and gs.get_player_entity().ready, self.gs, 5)
+            self.wait_until(lambda gs: gs.get_player_entity() and gs.get_player_entity().ready, self.gs, 5)
             self.tick()
             self.player.window.click(*Coordinate.COORD_READY)
-            self.tick(20)
+            self.wait_until(lambda gf: gf.fight_started, self.gs.game_fight, 1.5)
+
+        while self.gs.is_fighting and self.gs.game_fight is not None and self.gs.game_fight.fight_started:
+            # wait for turn
+            logging.info('HitAndRun fight started')
+            self.tick(1)
 
     # find a cell in preferred distance form all mobs
     def find_starting_cell(self):
         elected = []
         preferred = []
+        max_range = self.player.player_info['attack_spell']['range'][1]
         for cell in self.gs.game_fight.start_cells:
             min_distance_from_mobs = inf
+            has_sight = False
             for mob_cell in self.get_mob_cells():
                 d = Sight_Bresenham.distance(cell.posIJ, mob_cell.posIJ)
                 if d < min_distance_from_mobs:
                     min_distance_from_mobs = d
-                # TODO find cell in range of one mob
+                if self.gs.map.sight.has_sight(cell.posIJ, mob_cell.posIJ, max_range):
+                    has_sight = True
 
-            rec = {'min_distance_from_mobs': min_distance_from_mobs, "cell": cell}
-            if PREFERRED_MIN_DISTANCE_FROM_MOBS <= min_distance_from_mobs <= PREFERRED_MAX_DISTANCE_FROM_MOBS:
+            rec = {'min_distance_from_mobs': min_distance_from_mobs, "cell": cell, "has_sight": has_sight}
+            # logging.debug(f'find_starting_cell: {rec}')
+            if PREFERRED_MIN_DISTANCE_FROM_MOBS <= min_distance_from_mobs <= PREFERRED_MAX_DISTANCE_FROM_MOBS and rec['has_sight']:
                 preferred.append(rec)
             elected.append(rec)
 
@@ -67,11 +76,4 @@ class HitAndRun(Sequence):
     #     # TODO find nearest enemy in sight
     #     nearest = self.get_nearest()
     #     path = self.gs.map.graph
-    #     pass
-    #
-    # def in_range(self):
-    #     pass
-    #
-    # def end_fight(self):
-    #     # TODO close end message
     #     pass

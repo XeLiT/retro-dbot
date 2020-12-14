@@ -19,11 +19,17 @@ class MapChange:
 
 
 if __name__ == '__main__':
-    # m = MapChange(DATA)
+    m = MapChange(DATA)
+    # m.map.debug()
+    cell = m.map.cells[15]
+    print(cell)
+    s = m.map.sight.compute_sight(cell.posIJ, 3)
+    m.map.sight.display(s)
     # m.map.graph.debug_edges()
-    w = Window.list_windows()[0]
-    w.focus()
-    logging.basicConfig(level=logging.DEBUG)
-    w.click_cell(376, debug=True)
+    # w = Window.list_windows()[0]
+    # w.focus()
+    # logging.basicConfig(level=logging.DEBUG)
+    # w.click_cell(24, debug=True)
+
 
 

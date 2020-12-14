@@ -9,9 +9,9 @@ import config
 ENGAGE_TRIES_PER_MAP = 3
 ENGAGE_TRIES_PER_MOB = 2
 
+
 # SearchMob: Sequence to choose a mob and start a fight, use Observable design pattern
 class SearchMob(Sequence):
-
     def loop(self):
         logging.info('SearchMob Sequence')
         tries = 1
@@ -32,11 +32,12 @@ class SearchMob(Sequence):
     def engage_group_mob(self, group_mob):
         logging.info(f'SearchMob: engaging {group_mob}')
         tries = 1
-        while not self.player.wait_until(lambda x: x.is_fighting, self.gs, timeout=5) and tries <= ENGAGE_TRIES_PER_MOB:
+        while not self.gs.is_fighting and tries <= ENGAGE_TRIES_PER_MOB:
             self.w.click_rescue()
             self.check_menus()
             self.tick()
             self.w.click_fight(group_mob.cell)
+            self.player.wait_until(lambda x: x.is_fighting, self.gs, timeout=5)
             tries += 1
 
         if self.gs.is_fighting:

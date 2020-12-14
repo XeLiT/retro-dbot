@@ -8,6 +8,9 @@ from utils.helpers.collection import Collection
 from ai.algorithm.graph import Graph
 from ai.algorithm.line_of_sight import Sight_Bresenham
 import logging
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 class Map:
     def __init__(self, id, date, raw_key):
@@ -39,6 +42,19 @@ class Map:
                 i += take
             row_number += 1
         return Map.rotate(rows)
+
+    def debug(self):
+        matrix2d = self.matrix
+        size_i = 31
+        size_j = 31
+        world = np.zeros([size_i, size_j])
+        for i in range(len(matrix2d)):
+            for j in range(len(matrix2d[i])):
+                cell = matrix2d[i][j]
+                pos = cell.posIJ
+                world[i][j] = cell.movement
+        plt.imshow(world)
+        plt.show()
 
     def decrypt_mapdata(self, raw_data, raw_key):
         key = unquote(''.join([chr(int(raw_key[i:i+2], 16)) for i in range(0, len(raw_key), 2)]))
@@ -102,6 +118,6 @@ class Map:
             matrix_out.append([])
             for i in range(len(diags)):
                 cell = diags[i][j]
-                cell.posIJ = [i, j]
+                cell.posIJ = [j, i]
                 matrix_out[j].append(cell)
         return matrix_out

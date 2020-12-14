@@ -120,8 +120,8 @@ class Sight_Bresenham():
         self.is_obstacle_cb = is_obstacle_cb
 
     def is_obstable(self, p):
-        cell = self.world[p[0]][p[1]]
-        return self.is_obstacle_cb(cell)
+        num = self.world[p[0]][p[1]]
+        return num != CELL_VALUES["#"]
 
     @staticmethod
     def distance(p1, p2):
@@ -146,6 +146,16 @@ class Sight_Bresenham():
             if not has_obstacle:
                 yield target
 
+    def has_sight(self, from_pos, target, max_range):
+        if self.distance(from_pos, target) > max_range:
+            return False
+        line = list(bresenham_line(from_pos[0], from_pos[1], target[0], target[1]))
+        has_obstacle = False
+        for pt in line:
+            if self.is_obstable(pt):
+                has_obstacle = True
+        return not has_obstacle
+
     def fit(self, pos):
         return pos[0] >= 0 and pos[1] >= 0 and pos[0] < self.max_x and pos[1] < self.max_y
 
@@ -167,10 +177,10 @@ class Sight_Bresenham():
             for j in range(size_j):
                 pos = [i, j]
                 cell = matrix2d[i][j]
-                if not is_obstacle_cb(cell):
-                    world[pos[0]][pos[1]] = CELL_VALUES['.']
-                else:
+                if is_obstacle_cb(cell):
                     world[pos[0]][pos[1]] = CELL_VALUES['#']
+                else:
+                    world[pos[0]][pos[1]] = CELL_VALUES['.']
         return Sight_Bresenham(world, is_obstacle_cb)
 
 if __name__ == "__main__":

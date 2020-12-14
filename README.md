@@ -14,4 +14,10 @@ Update the config.py file with your data
 ```
 py main.py
 ```
- 
+## Support
+- network data parsing
+- map data parsing
+- GUI
+
+## Roadmap
+see TODO

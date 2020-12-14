@@ -2,8 +2,6 @@ search_mob:
   next_map
 
 hit and run sequence:
-  integrate line_of_sight
-  fight_placement
   pass turn
   move
   attack

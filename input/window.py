@@ -94,7 +94,8 @@ class Window:
         self.click(_x, _y + CELL_Y_OFFSET, wParam)
 
     def click_fight(self, cell):
-        _x, _y = self.cell_to_xy(cell)
+        cell_number = cell if isinstance(cell, int) else cell.index
+        _x, _y = self.cell_to_xy(cell_number)
         self.click(_x, _y + CELL_Y_OFFSET, win32con.MK_SHIFT)
         self.click(_x, _y + CELL_Y_OFFSET)
         time.sleep(0.6)
@@ -105,7 +106,6 @@ class Window:
         self.focus()
         time.sleep(TICK)
         self.click(*POS_RESCUE)
-        time.sleep(TICK)
 
     def cell_to_xy(self, cell):
         y, x = divmod(cell, 14.5)
