@@ -8,6 +8,7 @@ class Table(tk.Frame):
         tk.Frame.__init__(self, parent)
         self._widgets = []
         self.cells = []
+        self.parent = parent
         for row in range(rows):
             current_row = []
             for column in range(columns):
@@ -30,14 +31,13 @@ class Table(tk.Frame):
                 cell = cells[i][j]
                 widget = self._widgets[i][j]
                 widget.configure(background=cell.color, text=cell.text)
-                # widget.bind('<Button-1>', lambda e, a=i, b=j: self.debug_cell(a, b))
+                widget.bind('<Button-1>', lambda e, a=i, b=j: self.click_cell_event(a, b))
 
     def clear(self):
         for i in range(len(self._widgets)):
             for j in range(len(self._widgets[0])):
                 self._widgets[i][j].configure(background="black", text="")
 
-    def debug_cell(self, i, j):
+    def click_cell_event(self, i, j):
         cell = self.cells[i][j]
-        logging.info(cell)
-        logging.info(cell.entity)
+        self.parent.dispatch({"ref": None, "data": cell}, "cell_click_event")

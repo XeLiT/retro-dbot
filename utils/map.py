@@ -14,15 +14,15 @@ class Map:
         self.path = '{}/{}_{}{}.swf'.format(MAP_DIR, id, date, 'X' if raw_key else '')
         self.x, self.y = MAPID_TO_POS[id]
         swf = swfparser.parsefile(self.path)
-        raw_map_data = swf.tags[2].Actions[0].ConstantPool[14]
-        self.width = int(swf.tags[2].Actions[17].Integer)
-        self.height = (int(swf.tags[2].Actions[20].Integer) - 1) * 2
+        raw_map_data = swf.tags[1].Actions[0].ConstantPool[9]
+        self.width = int(swf.tags[1].Actions[5].Integer)
+        self.height = (int(swf.tags[1].Actions[14].Integer) - 1) * 2
         data = self.decrypt_mapdata(raw_map_data, raw_key)
         raw_cells = [data[i:i+10] for i in range(0, len(data), 10)]
-        self.cells = [Cell(i) for i in raw_cells]
+        self.cells = [Cell(raw_cells[i], i) for i in range(len(raw_cells))]
         self.matrix = self.matrixfy()
-        self.graph = Graph.from_matrix2d(self.matrix, lambda x: x.obj.dead)
-        self.sight = Sight_Bresenham.from_matrix2d(self.matrix, lambda pos: self.matrix[pos[0]][pos[1]].is_obstacle())
+        self.graph = Graph.from_matrix2d(self.matrix, lambda x: not x.obj.initialized or x.obj.movement == 0)
+        self.sight = Sight_Bresenham.from_matrix2d(self.matrix, lambda x: x.lineOfSight)
 
     def matrixfy(self) -> [[Cell]]:
         rows = []
@@ -61,15 +61,12 @@ class Map:
             else:
                 logging.error("indexed_by_cell out of range key: {cell} obj: {indexed_by_cell}")
 
-    def _cell_to_node(self, cell: Cell):
-        i, j = cell.posIJ
-        node_index = j + i * len(self.graph.nodes[0])
-        return self.graph.nodes[node_index]
-
-    def get_path(self, from_cell, to_cell):
-        self.graph.initial = self._cell_to_node(from_cell)
-        self.graph.target = self._cell_to_node(to_cell)
-        return list(map(lambda x: x.obj, self.graph.astar()))
+    def get_shortest_path(self, from_cell, to_cell):
+        from_node = from_cell.graph_node_ref # self.graph.nodes[from_cell.posIJ[1]][from_cell.posIJ[0]]
+        to_node = to_cell.graph_node_ref # self.graph.nodes[to_cell.posIJ[1]][to_cell.posIJ[0]]
+        logging.debug(f"FROM {from_node}")
+        logging.debug(f"TO {to_node}")
+        return list(map(lambda x: x.obj, self.graph.astar(from_node, to_node)))
 
     @staticmethod
     def _diag(matrix, size_i, size_j, i, j):

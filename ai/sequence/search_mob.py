@@ -29,14 +29,13 @@ class SearchMob(Sequence):
             if tries > ENGAGE_TRIES_PER_MAP:
                 self.next_map()
 
-        logging.info('SearchMob Sequence sleeping 5 seconds') ## TODO remove to return
-        time.sleep(5)
-
     def engage_group_mob(self, group_mob):
         logging.info(f'SearchMob: engaging {group_mob}')
         tries = 1
         while not self.player.wait_until(lambda x: x.is_fighting, self.gs, timeout=5) and tries <= ENGAGE_TRIES_PER_MOB:
             self.w.click_rescue()
+            self.check_menus()
+            self.tick()
             self.w.click_fight(group_mob.cell)
             tries += 1
 
@@ -46,7 +45,6 @@ class SearchMob(Sequence):
             logging.error(f"SearchMob click_fight too many retries for mob {str(group_mob)}")
             return False
 
-
     def next_map(self):
         pass # TODO
 
@@ -54,11 +52,11 @@ class SearchMob(Sequence):
         mobs = self.wait_until(lambda x: Collection(x.entities).find_all(type='GroupMob'), self.gs, 5)
         if not mobs or len(mobs) == 0:
             return None
-        return list(filter(lambda m: m.cell != 0 and sum(m.levels) <= config.MAX_MOB_GROUP_LEVEL, mobs))
+        return list(filter(lambda m: m.cell != 0 and sum(m.levels) <= config.MAX_MOB_GROUP_LEVEL and not self.gs.map.cells[m.cell].isSun, mobs))
 
     def check_menus(self):
         match = self.eye.wait_for_image(IMAGE_CLOSE_BUTTON_2)
-        logging.info(f"SearchMob coord_close {str(match)}")
+        logging.info(f"SearchMob check_menus {str(match)}")
         if match[0]:
             self.w.click(*match[1].center)
 

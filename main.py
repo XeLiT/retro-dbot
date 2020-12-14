@@ -19,7 +19,7 @@ if __name__ == '__main__':
     logging.info("Starting bot")
     ns.start()
     player = Player(config.PLAYERS[0], game_state)
-    gui.attach(player, "flag_search_mob")
+    gui.attach(player)
     player.start()
     gui.mainloop()
     if ns in threading.enumerate():

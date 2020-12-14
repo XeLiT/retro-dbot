@@ -27,12 +27,29 @@ class Player(threading.Thread, Observable, Observer, Sequence):
         self.login = None
         self.eye = None
         self.flag_search_mob = False
+        self.flag_debug_graph = False
+        self.flag_debug_sight = False
+        self.selected_cell = None
+        self.last_computed_path = None
         Sequence.__init__(self, self)
 
-    def update(self, event, event_type):
+    def update(self, event, event_type=None):
         if event_type == "flag_search_mob":  # GUI events
             self.flag_search_mob = not self.flag_search_mob
-            event["ref"].configure(text=f"Flag Searching Mob {str(self.flag_search_mob)}", background="green" if self.flag_search_mob else "white")
+            event["ref"].configure(text=f"Searching Mob {str(self.flag_search_mob)}", background="green" if self.flag_search_mob else "white")
+
+        elif event_type == "flag_debug_graph":  # GUI events
+            self.flag_debug_graph = not self.flag_debug_graph
+            self.game_state.map.graph.debug_edges()
+            event["ref"].configure(text=f"Debug Graph {str(self.flag_debug_graph)}", background="green" if self.flag_debug_graph else "white")
+
+        elif event_type == "flag_debug_sight":  # GUI events
+            self.flag_debug_sight = not self.flag_debug_sight
+            event["ref"].configure(text=f"Debug Sight {str(self.flag_debug_sight)}", background="green" if self.flag_debug_sight else "white")
+
+        elif event_type == "cell_click_event":
+            self.selected_cell = event["data"]
+            logging.debug(self.selected_cell)
 
     def find_window(self, *arg):
         if self.window:
@@ -49,6 +66,13 @@ class Player(threading.Thread, Observable, Observer, Sequence):
             return True
         return False
 
+    def debug_path(self):
+        cell = self.selected_cell
+        player_cell = self.game_state.get_entity_cell(self.game_state.get_player_entity())
+        path = self.game_state.map.get_shortest_path(player_cell, cell)
+        if len(path):
+            self.game_state.map.graph.debug_path(path)
+
     def run(self):
         while True:
             try:
@@ -56,13 +80,11 @@ class Player(threading.Thread, Observable, Observer, Sequence):
                     continue
                 if not self.wait_until(lambda x: x.player_entity_id != 0 and x.map, self.game_state):
                     continue
-                logging.info('Player found !')
-                # world_ai = SearchMob(self) # FIXME remove comments
-                # world_ai.loop()
-
-                fight_ai = HitAndRun(self)
-                fight_ai.loop()
-                self.tick()
+                world_ai = SearchMob(self)
+                world_ai.loop()
+                # fight_ai = HitAndRun(self)
+                # fight_ai.loop()
+                self.tick(10)
             except Exception as e:
                 logging.exception(e)
                 self.tick(self.TICK * 10)

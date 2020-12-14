@@ -1,6 +1,7 @@
 from utils.cell import unhash_cell
 import logging
 from utils.entity import Entity
+from utils.helpers.collection import Collection
 
 TURN_END = ' GTF80146042'
 END_FIGHT = 'GCK|1|Xelit'
@@ -41,9 +42,10 @@ DEBUG:root:   Data: ILS2000
 """
 
 
-# Helper class for fight sequence
+# Helper class for fight actions
 class GameFight:
-    def __init__(self):
+    def __init__(self, game_state):
+        self.gs = game_state
         self.start_cells = []
         self.entity_turn = 0
         self.modifier = None
@@ -56,7 +58,8 @@ class GameFight:
 
         parsed_data = unhash_cell(infos[0])
         for i in range(0, len(parsed_data), 2):
-            self.start_cells.append((parsed_data[i] << 6) + parsed_data[i+1])
+            cell_instance = self.gs.map.cells[(parsed_data[i] << 6) + parsed_data[i+1]]
+            self.start_cells.append(cell_instance)
 
         logging.debug('Fight: StartCells {}'.format(self.start_cells))
 
@@ -64,6 +67,12 @@ class GameFight:
         self.entity_turn = int(raw_data[3:].split('|')[0])
         self.fight_started = True
         logging.info('Turn {}'.format(self.entity_turn))
+
+    def set_player_ready(self, raw_data):
+        entity_ready = GameFight.parse_fight_ready(raw_data)
+        entity = Collection(self.gs.entities).find_one(id=entity_ready['entity_id'])
+        entity.ready = entity_ready['ready_state']
+        logging.info(f'set_player_ready: {str(entity_ready)}')
 
     @staticmethod
     def parse_fight_state(raw_data):  # GTM|-1;0;190;7;4;222;;190|-2;1|-3;1|80146042;0;534;8;5;311;;534

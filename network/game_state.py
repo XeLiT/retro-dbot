@@ -18,7 +18,7 @@ class GameState:
         self.entities: [Entity] = []
         self.map_id = 0
         self.gui = gui
-        self.game_fight: GameFight = GameFight()
+        self.game_fight = None
 
     def update_gui(self):
         self._find_player()
@@ -26,6 +26,9 @@ class GameState:
             self.map.remove_entities()
             self.map.place_entities(self.entities)
             self.gui.table.set_data(self.map.matrix)
+
+    def get_entity_cell(self, entity):
+        return self.map.cells[entity.cell]
 
     def get_player_entity(self):
         entity = Collection(self.entities).find_one(id=self.player_entity_id) if self.player_entity_id else None
@@ -81,15 +84,13 @@ class GameState:
         self.gui.table.clear()
 
     def set_fighting(self, fighting):
-        self.is_fighting = fighting
+        if fighting:
+            self.game_fight = GameFight(self)
+        else:
+            self.game_fight = None
         self.entities = []
-        logging.info('Fighting {}'.format(fighting))
         self.gui.set_fighting_state(fighting)
         self.gui.table.clear()
-        if fighting:
-            self.game_fight = GameFight()
+        logging.info('Fighting {}'.format(fighting))
+        self.is_fighting = fighting
 
-    def set_player_ready(self, entity_id=0, ready_state=False):
-        entity = Collection(self.entities).find_one(id=entity_id)
-        entity.ready = ready_state
-        logging.info('set_player_ready: {} {}'.format(entity_id, ready_state))

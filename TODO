@@ -1,10 +1,7 @@
 search_mob:
-  selection mob  by lvl
-  improve click precision
   next_map
 
 hit and run sequence:
-  integrate graph
   integrate line_of_sight
   fight_placement
   pass turn

@@ -7,5 +7,6 @@ class Inventory:
         self.window = window
 
     def open_inventory(self):
-        self.window.toggle_menu(2)
+        #self.window.toggle_menu(2)
+        pass
 

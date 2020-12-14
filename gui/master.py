@@ -21,7 +21,7 @@ class MasterGUI(tk.Tk, Observable):
 
         self.fighting_state = tk.Label(self, text="Not fighting", background='green', borderwidth=0, width=10)
         self.fighting_state.grid(row=(1 + 10 + 1), column=0, sticky="n", padx=0, rowspan=2, columnspan=3)
-        self.update_bot_config_search_mob()
+        self.set_config_buttons()
 
         self.table = None
         self.player = None
@@ -41,10 +41,18 @@ class MasterGUI(tk.Tk, Observable):
                 self.player_infos[i].configure(text=text)
             i += 1
 
-    def update_bot_config_search_mob(self):
+    def set_config_buttons(self):
         button = tk.Button(self, text="Searching Mob: False", borderwidth=0, width=20)
         button.grid(row=15, column=0, sticky="nw", padx=0)
-        button.bind("<Button-1>", lambda e: self.dispatch(e, "flag_search_mob"))
+        button.bind("<Button-1>", lambda e: self.dispatch({"ref": button}, "flag_search_mob"))
+
+        button_graph = tk.Button(self, text="Debug Graph: False", borderwidth=0, width=20)
+        button_graph.grid(row=16, column=0, sticky="nw", padx=0)
+        button_graph.bind("<Button-1>", lambda e: self.dispatch({"ref": button_graph}, "flag_debug_graph"))
+
+        button_sight = tk.Button(self, text="Debug Sight: False", borderwidth=0, width=20)
+        button_sight.grid(row=17, column=0, sticky="nw", padx=0)
+        button_sight.bind("<Button-1>", lambda e: self.dispatch({"ref": button_sight}, "flag_debug_sight"))
 
     def init_table(self, width, height):
         if self.table:

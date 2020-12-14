@@ -23,14 +23,14 @@ class NetworkSniffer(threading.Thread):
                 self.parse(packet)
             except Exception as e:
                 logging.exception(e)
+                logging.error(packet)
 
     def parse(self, packet):
-        if not packet.data.len:
+        if not packet or not packet.data or not packet.data.len:
             return
         binary = binascii.unhexlify(packet.data.data)
         data = filter(None, struct.unpack('!{}s'.format(len(binary)), binary)[0].decode('utf-8').replace('\n', '').split('\x00'))
 
-        # self.lock.acquire()
         for raw_data in data:
             try:
                 logging.debug('   Data: {}'.format(raw_data))
@@ -50,10 +50,10 @@ class NetworkSniffer(threading.Thread):
                 # Fight
                 elif raw_data.startswith('GP'):
                     self.game_state.game_fight.set_fight_start_cells(raw_data)
-                elif raw_data.startswith('GIC'):
+                elif raw_data.startswith('GIC'):  # set start pos
                     self.game_state.update_from_action(GameAction().parse_entity_start_cell(raw_data))
                 elif raw_data.startswith('GR'):
-                    self.game_state.set_player_ready(**GameFight.parse_fight_ready(raw_data))
+                    self.game_state.game_fight.set_player_ready(raw_data)
                 elif raw_data.startswith('GTS'):
                     self.game_state.game_fight.set_entity_turn(raw_data)
                 elif raw_data.startswith('GTM'):
@@ -63,4 +63,3 @@ class NetworkSniffer(threading.Thread):
             except Exception as e:
                 logging.error(f"Error parsing: {raw_data}")
                 logging.exception(e)
-        # self.lock.release()

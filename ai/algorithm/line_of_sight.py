@@ -123,7 +123,8 @@ class Sight_Bresenham():
         cell = self.world[p[0]][p[1]]
         return self.is_obstacle_cb(cell)
 
-    def distance(self, p1, p2):
+    @staticmethod
+    def distance(p1, p2):
         diff_x = abs(p2[0] - p1[0])
         diff_y = abs(p2[1] - p1[1])
         return diff_x + diff_y
@@ -165,7 +166,8 @@ class Sight_Bresenham():
         for i in range(size_i):
             for j in range(size_j):
                 pos = [i, j]
-                if not is_obstacle_cb(pos):
+                cell = matrix2d[i][j]
+                if not is_obstacle_cb(cell):
                     world[pos[0]][pos[1]] = CELL_VALUES['.']
                 else:
                     world[pos[0]][pos[1]] = CELL_VALUES['#']
